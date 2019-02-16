@@ -48,6 +48,4 @@ def lookup_class(name: str, start: Class) -> Class:
         return found
     if isinstance(PLAY_PACKAGE.children.get(name), Class):
         return PLAY_PACKAGE.children[name]
-    # if name in Builtin().classes:
-    #     return Builtin().classes[name]
     raise CompileException("Cannot find class {}".format(name))

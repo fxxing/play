@@ -28,32 +28,6 @@ class LoopVisitor(StatementVisitor):
         if not self.loop:
             raise CompileException('continue must inside loop')
 
-    # def enter_try_statement(self, try_statement: TryStatement):
-    #     self.exceptions.append(set())
-    #
-    # def leave_try_statement(self, try_statement: TryStatement):
-    #     # collect left exceptions, add to prev level
-    #     self.exceptions.pop()
-    #
-    # def enter_catch(self, catch: TryStatement.Catch):
-    #     deleted = set()
-    #     for handled in catch.types:
-    #         for throw in self.exceptions[-1]:
-    #             if throw.is_subclass_of(handled):
-    #                 deleted.add(throw)
-    #     self.exceptions[-1] = self.exceptions[-1].difference(deleted)
-    #
-    # def enter_method_call(self, method_call: MethodCall):
-    #     self.add_exceptions(method_call.method)
-    #
-    # def enter_class_creation(self, class_creation: ClassCreation):
-    #     self.add_exceptions(class_creation.constructor)
-    #
-    # def add_exceptions(self, method: Method):
-    #     for throw in method.throws:
-    #         if throw.is_subclass_of(CHECKED_EXCEPTION_CLASS):
-    #             self.exceptions[-1].add(throw)
-
 
 def is_terminal(statement: Statement) -> bool:
     if isinstance(statement, (ReturnStatement, ContinueStatement, BreakStatement)):

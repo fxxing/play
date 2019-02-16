@@ -72,29 +72,6 @@ def upper_type(t1, t2):
     return NUMBERS[max(i1, i2)]
 
 
-# def get_iter_type(cls: Class) -> Optional[Type]:
-#     # TODO move this to class
-#     # if cls.subclass_of(PLAY_PACKAGE.children['BooleanIterable']):
-#     #     return BOOLEAN_TYPE
-#     # if cls.subclass_of(PLAY_PACKAGE.children['ByteIterable']):
-#     #     return BYTE_TYPE
-#     # if cls.subclass_of(PLAY_PACKAGE.children['ShortIterable']):
-#     #     return SHORT_TYPE
-#     if cls.subclass_of(PLAY_PACKAGE.children['IntIterable']):
-#         return INT_TYPE
-#     # if cls.subclass_of(PLAY_PACKAGE.children['LongIterable']):
-#     #     return LONG_TYPE
-#     # if cls.subclass_of(PLAY_PACKAGE.children['FloatIterable']):
-#     #     return FLOAT_TYPE
-#     # if cls.subclass_of(PLAY_PACKAGE.children['DoubleIterable']):
-#     #     return DOUBLE_TYPE
-#     if cls.subclass_of(PLAY_PACKAGE.children['StringIterable']):
-#         return PLAY_PACKAGE.children['String']
-#     if cls.subclass_of(PLAY_PACKAGE.children['Iterable']):
-#         return PLAY_PACKAGE.children['Object']
-#     return None
-
-
 class Translate(Phase):
     def __init__(self):
         self.nodes = Context().nodes
@@ -420,10 +397,6 @@ class Translate(Phase):
             return self.return_statement(ctx.returnStatement())
         if ctx.assignStatement():
             return self.assign_statement(ctx.assignStatement())
-        # if ctx.tryStatement():
-        #     return self.try_statement(ctx.tryStatement())
-        # if ctx.throwStatement():
-        #     return self.throw_statement(ctx.throwStatement())
         if ctx.expression():
             return ExprStatement(self.expression(ctx.expression()))
         if ctx.block():
@@ -488,23 +461,3 @@ class Translate(Phase):
             if not isinstance(var, FieldAccess):
                 raise CompileException('left value must be variable or field')
             return AssignStatement(var, self.expression(ctx.expression(1)))
-
-    # def try_statement(self, ctx: PlayParser.TryStatementContext) -> Statement:
-    #     try_statement = TryStatement(self.block(ctx.block()))
-    #     for catchClause in ctx.catchClause():
-    #         exceptions: Set[Class] = {lookup_class(ct.IDENTIFIER().getText(), self.current_class) for ct in catchClause.catchTypes()}
-    #         for exception in exceptions:
-    #             if not exception.is_subclass_of(THROWABLE_CLASS):
-    #                 raise CompileException('{} it not exception'.format(exception.qualified_name))
-    #         try_statement.catches.append(TryStatement.Catch(catchClause.IDENTIFIER().getText(), exceptions, self.block(catchClause.block())))
-    #     if ctx.finallyClause():
-    #         try_statement.finally_block = self.block(ctx.finallyClause().block())
-    #     return try_statement
-
-    # def throw_statement(self, ctx: PlayParser.ThrowStatementContext) -> Statement:
-    #     expr = self.expression(ctx.expression())
-    #     if isinstance(expr.type, Primitive):
-    #         raise CompileException("Cannot throw type {}".format(expr.type.name))
-    #     if isinstance(expr.type, ObjectType) and not expr.type.cls.is_subclass_of(THROWABLE_CLASS):
-    #         raise CompileException("Cannot throw type {}".format(expr.type.cls.qualified_name))
-    #     return ThrowStatement(expr)

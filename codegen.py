@@ -146,8 +146,6 @@ class GenEnv(object):
                 return scope[name]
 
 
-
-
 class Codegen(Phase):
     def __init__(self):
         # TODO hash method
@@ -417,4 +415,3 @@ class Codegen(Phase):
             return self.builder.call(FUNCTIONS['new_string'], [value])
         else:
             return ir.Constant(create_type(expr.type), expr.value)
-            # return ir.Constant(None, None)

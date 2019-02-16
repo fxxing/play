@@ -165,6 +165,7 @@ class CheckCircularDependency(Phase):
 def is_native_type(type: Type) -> bool:
     return type in PRIMITIVES or type.cls in {PLAY_PACKAGE.children['Object'], PLAY_PACKAGE.children['String']}
 
+
 class EnterMember(Phase):
     def run(self):
         Report().begin("Enter member")
@@ -192,19 +193,9 @@ class EnterMember(Phase):
         if ctx.parameters():
             for v in ctx.parameters().variable():
                 parameter_type = build_type(v.typeName(), cls)
-                # if method.is_native:
-                #     if not is_native_type(parameter_type):
-                #         raise CompileException('native method {}.{} can only take primitive, String or Object as parameter'.format(cls.qualified_name, method.name))
-
                 method.parameters.append(Parameter(v.IDENTIFIER().getText(), parameter_type))
         if ctx.typeName():
             method.return_type = build_type(ctx.typeName(), cls)
-            # if method.is_native:
-            #     if not is_native_type(method.return_type):
-            #         raise CompileException('native method {}.{} can only return primitive, String or Object'.format(cls.qualified_name, method.name))
-        # if ctx.classTypeList():
-        #     for ct in ctx.classTypeList().classType():
-        #         method.throws.append(lookup_class(ct.IDENTIFIER().getText(), cls))
         Context().nodes[method] = ctx
         cls.put(method)
 
