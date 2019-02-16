@@ -1,0 +1,11 @@
+class Boolean {
+    __value: boolean
+
+    def Boolean(value: boolean) {
+        __value = value
+    }
+
+    def getValue() -> boolean {
+        return __value
+    }
+}

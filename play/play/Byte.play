@@ -1,0 +1,11 @@
+class Byte {
+    __value: byte
+
+    def Byte(value: byte) {
+        __value = value
+    }
+
+    def getValue() -> byte {
+        return __value
+    }
+}

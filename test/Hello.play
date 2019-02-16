@@ -1,0 +1,19 @@
+class Hello {
+    a: int
+    static def main() {
+        //h = new Hello()
+        //System.print("Hello world")
+        //x = 1 < 0 || 9 > 8
+        //h.a
+
+    }
+    static def test() {
+        while 1 < 10 {
+            System.print(1)
+            if true {
+            continue
+            }
+        }
+
+    }
+}

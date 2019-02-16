@@ -1,0 +1,3 @@
+native class Object {
+    native def equals(other: Object) -> boolean
+}

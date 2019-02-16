@@ -1,0 +1,11 @@
+class Short {
+    __value: short
+
+    def Short(value: short) {
+        __value = value
+    }
+
+    def getValue() -> short {
+        return __value
+    }
+}

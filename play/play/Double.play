@@ -1,0 +1,11 @@
+class Double {
+    __value: double
+
+    def Double(value: double) {
+        __value = value
+    }
+
+    def getValue() -> double {
+        return __value
+    }
+}

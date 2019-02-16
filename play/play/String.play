@@ -1,0 +1,20 @@
+native class String {
+
+    native def concat(str:String, other:boolean)
+
+    native def concat(str:String, other:byte)
+
+    native def concat(str:String, other:short)
+
+    native def concat(str:String, other:int)
+
+    native def concat(str:String, other:long)
+
+    native def concat(str:String, other:float)
+
+    native def concat(str:String, other:double)
+
+    native def concat(str:String, other:String)
+
+    native def concat(str:String, other:Object)
+}

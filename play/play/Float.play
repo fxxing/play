@@ -1,0 +1,11 @@
+class Float {
+    __value: float
+
+    def Float(value: float) {
+        __value = value
+    }
+
+    def getValue() -> float {
+        return __value
+    }
+}

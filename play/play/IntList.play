@@ -1,0 +1,4 @@
+native class IntList {
+
+    native def get(index: int) -> int
+}

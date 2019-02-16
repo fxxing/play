@@ -1,0 +1,11 @@
+class Long {
+    __value: long
+
+    def Long(value: long) {
+        __value = value
+    }
+
+    def getValue() -> long {
+        return __value
+    }
+}

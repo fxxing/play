@@ -1,0 +1,11 @@
+class Int {
+    __value: int
+
+    def Int(value: int) {
+        __value = value
+    }
+
+    def getValue() -> int {
+        return __value
+    }
+}

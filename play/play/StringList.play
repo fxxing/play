@@ -1,0 +1,4 @@
+native class StringList {
+
+    native def get(index: int) -> String
+}
