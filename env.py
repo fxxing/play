@@ -1,5 +1,5 @@
-from ast import Variable, Class, Field, Expr, ClassExpr, FieldAccess
-from builtin import PLAY_PACKAGE
+from ast import Variable, Class, Expr, ClassExpr, FieldAccess
+from type import PLAY_PACKAGE
 from util import CompileException
 
 
@@ -27,8 +27,8 @@ class Env(object):
             if name in scope:
                 return scope[name]
         if not static:
-            field = self.cls.inherited_members.get(name)
-            if isinstance(field, Field):
+            field = self.cls.lookup_field(name, silence=True)
+            if field:
                 return FieldAccess(None, field)
 
         try:

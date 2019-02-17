@@ -1,6 +1,15 @@
 class Hello {
+    a: double
+    __private: double
     static def main() {
         System.print("Hello world")
+        v = new HelloSub()
+        v.test0()
+    }
+    def test0() {
+        System.print("in super")
+    }
+    def __test1() {
 
     }
 }

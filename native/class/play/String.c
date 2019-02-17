@@ -1,6 +1,11 @@
 
 #include "String.h"
 
+
+NATIVE play_String play_String_new() {
+    return malloc(sizeof(struct struct_play_String));
+}
+
 NATIVE void play_String_concat_V_TO(play_String this, play_String str, play_Object other) {
 }
 

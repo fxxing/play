@@ -4,7 +4,8 @@
 
 #include <play.h>
 
-Class(play_Class, {
+DefineClass(play_Class, {
+    OBJECT_HEADER;
 });
 
 

@@ -1,0 +1,10 @@
+class HelloSub:Hello {
+    b:double
+    def test1() {
+        this.test0()
+    }
+    def test0() {
+        System.print("in sub")
+        super.test0()
+    }
+}

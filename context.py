@@ -9,6 +9,7 @@ class Context(object):
         self.nodes = {}
         self.source_locations: List[str] = []
         self.code_gen_file = None
+        self.const_file = None
         self.c_runtime_location = None
         self.c_source_location = None
         self.bootstrap_class = None

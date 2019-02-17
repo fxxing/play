@@ -1,3 +1,4 @@
+import functools
 from typing import List, Set, Dict, Union, Optional
 
 from util import CompileException
@@ -24,6 +25,9 @@ class Package(object):
             return qualified_name + '.' + self.name
         return self.name
 
+    def __repr__(self):
+        return self.qualified_name
+
 
 class SourceFile(object):
     def __init__(self, name: str):
@@ -40,46 +44,121 @@ class Class(object):
         self.is_abstract = False
         self.is_native = False
         self.superclass: Optional[Class] = None
-        self.interfaces = []
-        self.members: Dict[str, ClassMemberType] = {}
-        self.static_members: Dict[str, MethodGroup] = {}
-        self.inherited_members: Dict[str, ClassMemberType] = None
-        self.inherited_fields: List[Field] = None
+        self.interfaces: List[Class] = []
+        self.fields: List[Field] = []
+        self.methods: List[Method] = []
+        self.static_methods: List[Method] = []
+        self.__inherited_methods: List[Method] = None
+        self.__inherited_fields: List[Field] = None
         for k, v in kwargs.items():
             setattr(self, k, v)
 
-    def put(self, child):
-        if isinstance(child, Method):
-            members = self.static_members if child.is_static else self.members
-            group = members.get(child.name)
-            if group:
-                if not isinstance(group, MethodGroup):
-                    raise CompileException('Duplicated symbol {} in package {}'.format(child.name, self.qualified_name))
-            else:
-                group = MethodGroup(child.name)
-                members[child.name] = group
-            group.methods.add(child)
-        elif child.name in self.members and self.members[child.name] != child:
-            raise CompileException('Duplicated symbol {} in package {}'.format(child.name, self.qualified_name))
-        else:
-            self.members[child.name] = child
+    def put_method(self, method):
+        methods = self.static_methods if method.is_static else self.methods
+        for m in methods:
+            if m.has_same_signature(method):
+                raise CompileException('Duplicated method {} in class {}'.format(method.name, self))
+        methods.append(method)
 
-    def get_inherited_fields(self):
-        if self.inherited_fields is not None:
-            return self.inherited_fields
-        super_fields = self.superclass.get_inherited_fields() if self.superclass else []
-        this_fields = list(filter(lambda m: isinstance(m, Field), self.members.values()))
-        self.inherited_fields = super_fields + this_fields
-        return self.inherited_fields
+    def put_field(self, field):
+        for f in self.fields:
+            if f.name == field.name:
+                raise CompileException('Duplicated field {} in class {}'.format(field.name, self))
+        self.fields.append(field)
+
+    @property
+    def inherited_fields(self):
+        # type: ()-> List[Field]
+        if self.__inherited_fields is not None:
+            return self.__inherited_fields
+        super_fields = self.superclass.inherited_fields if self.superclass else []
+        self.__inherited_fields = super_fields + self.fields
+        return self.__inherited_fields
+
+    @property
+    def inherited_methods(self):
+        # type: ()-> List[Method]
+        if self.__inherited_methods is not None:
+            return self.__inherited_methods
+        methods = list(filter(lambda m: m.can_inherit(), self.superclass.inherited_methods)) if self.superclass else [][:]
+        for interface in self.interfaces:
+            for interface_method in interface.inherited_methods:
+                replace_method = None
+                for i, method in enumerate(methods):
+                    if method.has_same_signature(interface_method):
+                        if method.is_abstract and not interface_method.is_abstract:
+                            replace_method = i
+                        break
+                else:
+                    methods.append(interface_method)
+                if replace_method:
+                    methods[replace_method] = interface_method
+
+        for this_method in self.methods:
+            replace_method = None
+            for i, method in enumerate(methods):
+                if method.has_same_signature(this_method):
+                    replace_method = i
+                    break
+            else:
+                methods.append(this_method)
+            if replace_method:
+                methods[replace_method] = this_method
+
+        def cmp_method(m1: Method, m2: Method) -> int:
+            if m2.is_private:
+                return -1
+            elif m1.is_private:
+                return 1
+            return 0
+
+        self.__inherited_methods = sorted(methods, key=functools.cmp_to_key(cmp_method))
+        return self.__inherited_methods
 
     def subclass_of(self, cls):
         # type: (Class) -> bool
         for superclass in self.superclasses:
-            if superclass.qualified_name == cls.qualified_name:
+            if superclass == cls:
                 return True
             if superclass.subclass_of(cls):
                 return True
         return False
+
+    def lookup_method(self, name: str, arguments, is_static=False):
+        # type: (str, List[Type], bool) -> Method
+        methods = self.static_methods if is_static else self.inherited_methods
+        for method in methods:
+            if method.name != name:
+                continue
+            if len(method.parameters) != len(arguments):
+                continue
+            for i, parameter in enumerate(method.parameters):
+                if arguments[i] != parameter.type:
+                    break
+            else:
+                return method
+
+        raise CompileException('Cannot find method {} with parameters {}'.format(name, arguments))
+
+    def lookup_super_method(self, name: str, arguments):
+        # type: (str, List[Type]) -> Method
+        method = self.superclass.lookup_method(name, arguments)
+        if not method:
+            for interface in self.interfaces:
+                method = interface.lookup_method(name, arguments)
+                if method.is_abstract:
+                    method = None
+        if method:
+            return method
+        raise CompileException('Cannot find method {} with parameters {}'.format(name, arguments))
+
+    def lookup_field(self, name: str, silence=False):
+        # type: (str) -> Field
+        for field in self.inherited_fields:
+            if field.name == name:
+                return field
+        if not silence:
+            raise CompileException('Cannot find field {}'.format(name))
 
     @property
     def qualified_name(self) -> str:
@@ -95,6 +174,12 @@ class Class(object):
 
     def __repr__(self):
         return self.qualified_name
+
+    def __eq__(self, other):
+        return self.qualified_name == other.qualified_name
+
+    def __hash__(self):
+        return hash(self.qualified_name)
 
 
 class Type(object):
@@ -123,17 +208,19 @@ class Method(object):
         return self.name.startswith("__")
 
     def can_inherit(self):
-        return not (self.is_static or self.is_private)
+        return not (self.name == '<init>' or self.is_private)
 
-
-class MethodGroup(object):
-    def __init__(self, name: str, methods: Set[Method] = None):
-        self.name = name
-        self.methods: Set[Method] = methods if methods else set()
-
-    @property
-    def first(self):
-        return list(self.methods)[0]
+    def has_same_signature(self, other) -> bool:
+        # type: (Method) -> bool
+        if self.name != other.name:
+            return False
+        if len(self.parameters) != len(other.parameters):
+            return False
+        for i, p1 in enumerate(self.parameters):
+            p2 = other.parameters[i]
+            if p1.type != p2.type:
+                return False
+        return True
 
 
 class Field(object):
@@ -146,6 +233,9 @@ class Field(object):
     @property
     def is_private(self):
         return self.name.startswith("__")
+
+    def __repr__(self):
+        return 'Field({})'.format(self.name)
 
 
 class Primitive(Type):
@@ -164,7 +254,7 @@ class ObjectType(Type):
         self.cls = cls
 
     def __eq__(self, other):
-        return isinstance(other, ObjectType) and self.cls.qualified_name == other.cls.qualified_name
+        return isinstance(other, ObjectType) and self.cls == other.cls
 
     def __repr__(self):
         return self.cls.qualified_name
@@ -181,7 +271,6 @@ class Parameter(object):
         self.type = type
 
 
-ClassMemberType = Union[Field, MethodGroup]
 PackageChildType = Union[Package, Class]
 
 
@@ -310,28 +399,6 @@ class AssignStatement(Statement):
 class ReturnStatement(Statement):
     def __init__(self, expr: Expr):
         self.expr = expr
-
-
-# class ThrowStatement(Statement):
-#     def __init__(self, expression: Expr):
-#         self.expression = expression
-
-
-# class TryStatement(Statement):
-#     fields = ('block', 'catches', 'finally_block')
-#
-#     class Catch(Statement):
-#         fields = ('block',)
-#
-#         def __init__(self, var, types: Set[Class], block: Block):
-#             self.var = var
-#             self.types = types
-#             self.block = block
-#
-#     def __init__(self, block: Block):
-#         self.block = block
-#         self.catches: List[TryStatement.Catch] = []
-#         self.finally_block: Optional[Block] = None
 
 
 class ExprStatement(Statement):

@@ -1,10 +1,10 @@
 import os
-from typing import List, Dict
+from typing import List
 
 from antlr4 import CommonTokenStream, FileStream
 
-from ast import SourceFile, Package, Class, ObjectType, Field, Method, Parameter, MethodGroup, ClassMemberType, Type, Block
-from builtin import ROOT_PACKAGE, BOOLEAN_TYPE, BYTE_TYPE, SHORT_TYPE, INT_TYPE, LONG_TYPE, FLOAT_TYPE, DOUBLE_TYPE, PLAY_PACKAGE, PRIMITIVES
+from ast import SourceFile, Package, Class, ObjectType, Field, Method, Parameter, Type, Block, ClassType
+from type import ROOT_PACKAGE, BOOLEAN_TYPE, BYTE_TYPE, SHORT_TYPE, INT_TYPE, LONG_TYPE, FLOAT_TYPE, DOUBLE_TYPE, PLAY_PACKAGE, PRIMITIVES
 from context import Context
 from env import lookup_class
 from parser.PlayLexer import PlayLexer
@@ -82,7 +82,7 @@ class EnterClass(Phase):
         cls.is_interface = ctx.INTERFACE() is not None
         cls.is_native = ctx.NATIVE() is not None
         if cls.is_native and cls.is_interface:
-            raise CompileException('interface {} cannot be native'.format(cls.qualified_name))
+            raise CompileException('interface {} cannot be native'.format(cls))
         Context().nodes[cls] = ctx
         package.put(cls)
         SymbolTable().enter_class(cls)
@@ -111,20 +111,22 @@ class BuildHierarchy(Phase):
 
     def build(self, cls: Class):
         ctx: PlayParser.ClassDeclarationContext = Context().nodes[cls]
-        if not ctx.classTypeList():
-            return
-        for sc in ctx.classTypeList().classType():
-            superclass = lookup_class(sc.IDENTIFIER().getText(), cls)
-            if superclass.is_native:
-                raise CompileException('Cannot inherit from native class {}'.format(superclass.qualified_name))
-            if superclass.is_interface:
-                cls.interfaces.append(superclass)
-            elif cls.superclass:
-                raise CompileException("Class {} has more than one superclass".format(cls.qualified_name))
-            else:
-                cls.superclass = superclass
-        if not cls.is_interface and not cls.superclass:
-            cls.superclass = PLAY_PACKAGE.children['Object']
+        if ctx.classTypeList():
+            for sc in ctx.classTypeList().classType():
+                superclass = lookup_class(sc.IDENTIFIER().getText(), cls)
+                if superclass.is_native:
+                    raise CompileException('Cannot inherit from native class {}'.format(superclass))
+                if superclass.is_interface:
+                    cls.interfaces.append(superclass)
+                elif cls.superclass:
+                    raise CompileException("Class {} has more than one superclass".format(cls))
+                elif superclass.is_native and superclass.qualified_name != 'play.Object':
+                    raise CompileException("Cannot inherit native class {}".format(cls))
+                else:
+                    cls.superclass = superclass
+        obj_cls = PLAY_PACKAGE.children['Object']
+        if cls != obj_cls and not cls.is_interface and not cls.superclass:
+            cls.superclass = obj_cls
 
 
 class CheckCircularDependency(Phase):
@@ -176,8 +178,8 @@ class EnterMember(Phase):
                     self.enter_method(cls, member.methodDeclaration())
                 else:
                     self.enter_field(cls, member.fieldDeclaration())
-            if '<init>' not in cls.members:
-                cls.members['<init>'] = MethodGroup('<init>', {Method('<init>', cls, block=Block([]))})
+            if not list(filter(lambda m: m.name == '<init>', cls.methods)):
+                cls.methods.append(Method('<init>', cls, parameters=[], body=Block([])))
         Report().end()
 
     def enter_method(self, cls: Class, ctx: PlayParser.MethodDeclarationContext):
@@ -189,7 +191,7 @@ class EnterMember(Phase):
         method.is_static = ctx.STATIC() is not None
         method.is_abstract = not method.is_native and ctx.block() is None
         if method.is_native and ctx.block() is not None:
-            raise CompileException('Native method {} in class {} cannot have body'.format(method.name, method.owner.qualified_name))
+            raise CompileException('Native method {} in class {} cannot have body'.format(method.name, method.owner))
         if ctx.parameters():
             for v in ctx.parameters().variable():
                 parameter_type = build_type(v.typeName(), cls)
@@ -197,111 +199,11 @@ class EnterMember(Phase):
         if ctx.typeName():
             method.return_type = build_type(ctx.typeName(), cls)
         Context().nodes[method] = ctx
-        cls.put(method)
+        cls.put_method(method)
 
     def enter_field(self, cls: Class, ctx: PlayParser.FieldDeclarationContext):
-        if cls.is_interface:
-            raise CompileException("Interface {} cannot have fields".format(cls.qualified_name))
+        if cls.is_interface or cls.is_native:
+            raise CompileException("Interface/native class {} cannot have fields".format(cls))
         field = Field(ctx.variable().IDENTIFIER().getText(), cls, build_type(ctx.variable().typeName(), cls))
         Context().nodes[field] = ctx
-        cls.put(field)
-
-
-def has_same_signature(self: Method, other: Method) -> bool:
-    # TODO move to method
-    if len(self.parameters) != len(other.parameters):
-        return False
-    for i, p1 in enumerate(self.parameters):
-        p2 = other.parameters[i]
-        if p1.type != p2.type:
-            return False
-    return True
-
-
-class CheckDuplicatedSignature(Phase):
-    def run(self):
-        Report().begin("Check duplicated signature")
-        for cls in SymbolTable().get_classes():
-            for child in cls.members.values():
-                if isinstance(child, MethodGroup):
-                    self.check(child)
-            for child in cls.static_members.values():
-                self.check(child)
-        Report().end()
-
-    def check(self, group: MethodGroup):
-        methods = list(group.methods)
-        for i, m1 in enumerate(methods):
-            for j in range(i + 1, len(methods)):
-                if has_same_signature(m1, methods[j]):
-                    raise CompileException("method in class {} with name {} has same signature".format(m1.owner.qualified_name, m1.name))
-
-
-class InheritMember(Phase):
-    def run(self):
-        Report().begin("Inherit member")
-        for cls in SymbolTable().get_classes():
-            self.inherit(cls)
-        Report().end()
-
-    def inherit(self, current: Class) -> Dict[str, ClassMemberType]:
-        if current.inherited_members is not None:
-            return current.inherited_members
-        super_members: Dict[str, ClassMemberType] = {}
-        for superclass in current.superclasses:
-            self.union_super(super_members, self.inherit(superclass))
-
-        inherited_members: Dict[str, ClassMemberType] = dict(current.members)
-        for name, super_member in super_members.items():
-            if name == '<init>':
-                continue
-            if isinstance(super_member, Field):
-                if name in inherited_members and not super_member.is_private:
-                    raise CompileException("Class {} override field {} of {}".format(current.qualified_name, name, super_member.owner.qualified_name))
-            else:
-                this_group = inherited_members.get(name)
-                if not this_group:
-                    this_group = MethodGroup(name)
-                if not isinstance(this_group, MethodGroup):
-                    raise CompileException("Class {} override {} of {} with different type".format(current.qualified_name, name, super_member.first.owner.qualified_name))
-                new_methods = set(this_group.methods)
-                self.inherit_from(new_methods, super_member.methods)
-                inherited_members[name] = MethodGroup(name, new_methods)
-        if not current.is_interface:
-            for group in filter(lambda x: isinstance(x, MethodGroup), inherited_members.values()):
-                if any(method.is_abstract for method in group.methods):
-                    current.is_abstract = True
-                    break
-        current.inherited_members = inherited_members
-        return current.inherited_members
-
-    def inherit_from(self, found, methods):
-        for m in methods:
-            if not m.can_inherit():
-                continue
-            for nm in found:
-                if self.is_same_method(m, nm):
-                    break
-            else:
-                found.add(m)
-
-    def is_same_method(self, m1: Method, m2: Method) -> bool:
-        if has_same_signature(m1, m2):
-            if m1.return_type != m2.return_type:
-                raise CompileException("Class {} conflict method {} with different return type".format(m2.owner.qualified_name, m2.name))
-            return True
-        return False
-
-    def union_super(self, members: Dict[str, ClassMemberType], union_members: Dict[str, ClassMemberType]):
-        for name, union_member in union_members.items():
-            if name in members:
-                group = members[name]
-                if isinstance(group, Field):
-                    raise CompileException("Class {} override field {} in {} with method".format(
-                        union_member.first.owner.qualified_name, group.owner.qualified_name, name))
-
-                new_methods = {m for m in group.methods if m.can_inherit()}
-                self.inherit_from(new_methods, union_member.methods)
-            else:
-                new_methods = {m for m in union_member.methods if not m.can_inherit()}
-            members[name] = MethodGroup(name, new_methods)
+        cls.put_field(field)

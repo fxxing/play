@@ -4,11 +4,10 @@
 
 #include <play.h>
 
-Class(play_IntList, {
+DefineClass(play_IntList, {
+    OBJECT_HEADER;
     pint length;
     pint *items;
 });
-
-NATIVE pint play_IntList_get_I_I(play_IntList this, pint index);
 
 #endif //PLAY_INTLIST_H

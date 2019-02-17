@@ -4,10 +4,9 @@
 
 #include <play.h>
 
-Class(play_Object, {
+DefineClass(play_Object, {
+    OBJECT_HEADER;
 });
 
-
-NATIVE pboolean play_Object_equals_B_O(play_Object this, play_Object other);
 
 #endif //PLAY_OBJECT_H

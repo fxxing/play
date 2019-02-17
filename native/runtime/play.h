@@ -6,6 +6,11 @@
 #ifndef PLAY_H
 #define PLAY_H
 
+#include <stddef.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include "ugc.h"
+
 typedef unsigned char pboolean;
 typedef unsigned char pbyte;
 typedef short pshort;
@@ -14,14 +19,16 @@ typedef long plong;
 typedef float pfloat;
 typedef double pdouble;
 
+#define OBJECT_HEADER   ugc_header_t *next;ugc_header_t *prev;int classId;
+
 #define TRUE 1
 #define FALSE 0
 
 
-
-#define Class(name, text) struct struct_##name text; \
+#define DefineClass(name, text) struct struct_##name text; \
 typedef struct struct_##name* name;
 
 #define NATIVE __attribute__((unused))
+
 
 #endif //PLAY_H

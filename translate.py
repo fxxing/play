@@ -1,8 +1,8 @@
 from typing import Tuple
 
 from ast import *
-from builtin import *
-from builtin import INTEGER_NUMBERS, NUMBERS
+from type import *
+from type import INTEGER_NUMBERS, NUMBERS
 from context import Context
 from env import Env, lookup_class
 from parser.PlayParser import PlayParser
@@ -33,32 +33,6 @@ def can_cast_to(self: Type, to_type: Type, force=False) -> bool:
     return False
 
 
-def lookup_method(cls: Class, name: str, arguments: List[Type], is_static=False) -> Method:
-    # TODO move this to class
-    members = cls.static_members if is_static else cls.inherited_members
-    group = members.get(name)
-    if not isinstance(group, MethodGroup):
-        raise CompileException('Cannot find method {}'.format(name))
-    for method in group.methods:
-        if len(method.parameters) != len(arguments):
-            continue
-        for i, parameter in enumerate(method.parameters):
-            if arguments[i] != parameter.type:
-                break
-        else:
-            return method
-
-    raise CompileException('Cannot find method {} with parameters {}'.format(name, arguments))
-
-
-def lookup_field(self: Class, name: str) -> Field:
-    # TODO move this to class
-    field = self.inherited_members.get(name)
-    if not isinstance(field, Field):
-        raise CompileException('Cannot find field {}'.format(name))
-    return field
-
-
 def assert_type(actual, expect):
     if not isinstance(expect, (set, list)):
         expect = [expect]
@@ -84,7 +58,7 @@ class Translate(Phase):
     def run(self):
         Report().begin("Translate")
         for cls in SymbolTable().get_classes():
-            Report().report('translate {}'.format(cls.qualified_name), lambda: self.translate(cls))
+            Report().report('translate {}'.format(cls), lambda: self.translate(cls))
         Report().end()
 
         Context().nodes = {}
@@ -94,16 +68,11 @@ class Translate(Phase):
         self.this_var = Variable('this', ObjectType(self.current_class))
         self.super_var = Variable('super', ObjectType(self.current_class.superclass))
         self.env = Env(self.current_class)
-        for member in cls.members.values():
-            if isinstance(member, Field):
-                self.translate_field(member)
-            else:
-                for method in member.methods:
-                    self.translate_method(method)
+        for field in cls.fields:
+            self.translate_field(field)
 
-        for member in cls.static_members.values():
-            for method in member.methods:
-                self.translate_method(method)
+        for method in cls.methods + cls.static_methods:
+            self.translate_method(method)
 
     def translate_field(self, field: Field):
         ctx: PlayParser.FieldDeclarationContext = self.nodes[field]
@@ -134,17 +103,16 @@ class Translate(Phase):
             return self.logical_or_expression(ctx.logicalOrExpression())
         if ctx.methodCall():
             return self.method_call(ctx.methodCall(), self.expression(ctx.expression()))
-        return self.field_access(ctx.IDENTIFIER().getText(), self.expression(ctx.expression()))
+        return self.field_access(ctx.IDENTIFIER().getText(), self.not_super(self.expression(ctx.expression())))
 
     def field_access(self, name: str, select: Expr) -> Expr:
-        if select == self.super_var:
-            raise CompileException('Cannot access field {} via super'.format(name))
         if not isinstance(select.type, ObjectType):
             raise CompileException("cannot lookup field in {}".format(select.type))
-        return FieldAccess(select, lookup_field(select.type.cls, name))
+        return FieldAccess(select, select.type.cls.lookup_field(name))
 
     def bin_expr(self, op, left, right) -> Expr:
-        # TODO make sure left and right have same primitive type
+        self.not_super(left)
+        self.not_super(right)
         if op in {'||', '&&'}:
             assert_type(left.type, BOOLEAN_TYPE)
             assert_type(right.type, BOOLEAN_TYPE)
@@ -156,7 +124,7 @@ class Translate(Phase):
                 if isinstance(right_type, ObjectType):
                     if right_type.cls != string:
                         right_type = PLAY_PACKAGE.children['Object']
-                return MethodCall(ClassExpr(string), lookup_method(string, 'concat', [right_type], is_static=True), [right])
+                return MethodCall(ClassExpr(string), string.lookup_method('concat', [right_type], is_static=True), [right])
             assert_type(left.type, NUMBERS)
             assert_type(right.type, NUMBERS)
             type = upper_type(left.type, right.type)
@@ -236,8 +204,7 @@ class Translate(Phase):
     def cast_expression(self, ctx: PlayParser.CastExpressionContext) -> Expr:
         if ctx.unaryExpression():
             return self.unary_expression(ctx.unaryExpression())
-        # unwrap if could
-        expr = self.cast_expression(ctx.castExpression())
+        expr = self.not_super(self.cast_expression(ctx.castExpression()))
         type = build_type(ctx.typeName(), self.current_class)
         if not can_cast_to(expr.type, type, force=True):
             raise CompileException('Cannot cast type {} to {}'.format(expr.type, type))
@@ -248,7 +215,13 @@ class Translate(Phase):
             return self.primary_expression(ctx.primaryExpression())
         return self.unary_expr(ctx.uop.text, self.cast_expression(ctx.castExpression()))
 
+    def not_super(self, expr: Expr) -> Expr:
+        if expr == self.super_var:
+            raise CompileException('Cannot user super')
+        return expr
+
     def unary_expr(self, op, expr: Expr) -> Expr:
+        self.not_super(expr)
         if op == '!':
             assert_type(expr.type, BOOLEAN_TYPE)
         elif op in {'+', '-'}:
@@ -258,7 +231,7 @@ class Translate(Phase):
         return UnaryExpr(op, expr)
 
     def primary_expression(self, ctx: PlayParser.PrimaryExpressionContext) -> Expr:
-        if self.current_method.is_static and ctx.THIS() or ctx.SUPER():
+        if self.current_method.is_static and (ctx.THIS() or ctx.SUPER()):
             raise CompileException('Cannot use this/super in static method')
         if ctx.methodCall():
             return self.method_call(ctx.methodCall())
@@ -279,44 +252,47 @@ class Translate(Phase):
     def class_creation(self, ctx: PlayParser.ClassCreationContext) -> Expr:
         cls = lookup_class(ctx.classType().IDENTIFIER().getText(), self.current_class)
         if cls.is_interface:
-            raise CompileException("Cannot instantiate interface {}".format(cls.qualified_name))
+            raise CompileException("Cannot instantiate interface {}".format(cls))
         if cls.is_abstract:
-            raise CompileException("Cannot instantiate abstract class {}".format(cls.qualified_name))
+            raise CompileException("Cannot instantiate abstract class {}".format(cls))
         arguments = self.expression_list(ctx.expressionList())
         types = [arg.type for arg in arguments]
-        return ClassCreation(cls, lookup_method(cls, '<init>', types), arguments)
+        return ClassCreation(cls, cls.lookup_method('<init>', types), arguments)
 
     def expression_list(self, ctx: PlayParser.ExpressionListContext) -> List[Expr]:
         if not ctx:
             return []
-        return [self.expression(expr) for expr in ctx.expression()]
+        return [self.not_super(self.expression(expr)) for expr in ctx.expression()]
 
     def method_call(self, ctx: PlayParser.MethodCallContext, select: Expr = None) -> Expr:
         if self.current_method.is_static and ctx.THIS() or ctx.SUPER():
             raise CompileException('Cannot use this/super in static method')
 
-        # TODO what to do when select is super?
         if select and (ctx.THIS() or ctx.SUPER()):
             raise CompileException('this() and super() cannot has prefix')
         arguments = self.expression_list(ctx.expressionList())
         types = [arg.type for arg in arguments]
         if ctx.THIS():
-            method = lookup_method(self.current_class, '<init>', types)
+            method = self.current_class.lookup_method('<init>', types)
         elif ctx.SUPER():
-            method = lookup_method(self.current_class.superclass, '<init>', types)
+            if self.current_method.name != '<init>':
+                raise CompileException('Cannot call super outside constructor {}'.format(self.current_class))
+            method = self.current_class.superclass.lookup_method('<init>', types)
             if method.is_private:
-                raise CompileException('access private method in {}'.format(self.current_class.superclass.qualified_name))
+                raise CompileException('access private method in {}'.format(self.current_class.superclass))
         else:
             method_name = ctx.IDENTIFIER().getText()
             if select:
                 if not isinstance(select.type, ObjectType):
                     raise CompileException("cannot lookup method in {}".format(select.type))
-                method = lookup_method(select.type.cls, method_name, types, isinstance(select.type, ClassType))
-                if method.is_private:
-                    if not select.type.cls.qualified_name == self.current_class.qualified_name:
-                        raise CompileException('access private method in {}'.format(select.type))
+                if select == self.super_var:
+                    method = self.current_class.lookup_super_method(method_name, types)
+                else:
+                    method = select.type.cls.lookup_method(method_name, types, isinstance(select.type, ClassType))
+                if method.is_private and select.type.cls != self.current_class:
+                    raise CompileException('access private method in {}'.format(select.type))
             else:
-                method = lookup_method(self.current_class, method_name, types)
+                method = self.current_class.lookup_method(method_name, types, is_static=self.current_method.is_static)
         return MethodCall(select, method, arguments)
 
     def literal(self, ctx: PlayParser.LiteralContext) -> Expr:
@@ -445,7 +421,7 @@ class Translate(Phase):
     def assign_statement(self, ctx: PlayParser.AssignStatementContext) -> Statement:
         if ctx.IDENTIFIER():
             target = ctx.IDENTIFIER().getText()
-            expr = self.expression(ctx.expression(0))
+            expr = self.not_super(self.expression(ctx.expression(0)))
             type = build_type(ctx.typeName(), self.current_class) if ctx.typeName() else None
             if type:
                 if not can_cast_to(expr.type, type):

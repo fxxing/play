@@ -5,11 +5,10 @@
 #include <play.h>
 #include <play/String.h>
 
-Class(play_StringList, {
+DefineClass(play_StringList, {
+    OBJECT_HEADER;
     pint length;
     play_String items;
 });
-
-NATIVE play_String play_StringList_get_T_I(play_StringList this, pint index);
 
 #endif //PLAY_STRINGLIST_H

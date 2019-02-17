@@ -3,6 +3,7 @@ import os
 import flow
 import phase
 import translate
+from cgen import NativeGen, RuntimeGen
 from codegen import Codegen
 from context import Context
 from report import Report
@@ -37,28 +38,26 @@ class Link(phase.Phase):
 
 
 class Compiler(object):
-    def __init__(self):
-        self.phases = [
-            phase.Parse(),
-
-            phase.EnterClass(),
-            phase.ResolveImport(),
-            phase.BuildHierarchy(),
-            phase.CheckCircularDependency(),
-
-            phase.EnterMember(),
-            phase.CheckDuplicatedSignature(),
-            phase.InheritMember(),
-            translate.Translate(),
-            flow.ControlFlowAnalyse(),
-            Codegen(),
-            # CGen(),
-            Link(),
-        ]
-
     def compile(self):
-        for p in self.phases:
-            p.run()
+        phases = [
+            phase.Parse,
+
+            phase.EnterClass,
+            phase.ResolveImport,
+            phase.BuildHierarchy,
+            phase.CheckCircularDependency,
+
+            phase.EnterMember,
+            translate.Translate,
+            flow.ControlFlowAnalyse,
+
+            NativeGen,
+            RuntimeGen,
+            Codegen,
+            Link,
+        ]
+        for p in phases:
+            p().run()
 
 
 def main():
@@ -66,6 +65,7 @@ def main():
     ctx.source_locations = ['play', 'test']
     ctx.bootstrap_class = 'Hello'
     ctx.code_gen_file = 'build/play.ll'
+    ctx.const_file = 'native/runtime/const.c'
     ctx.c_runtime_location = 'native/runtime'
     ctx.c_source_location = 'native/class'
     Compiler().compile()

@@ -1,6 +1,6 @@
 from typing import List
 
-from ast import Method, Statement, LoopStatement, IfStatement, ReturnStatement, Block, BreakStatement, ContinueStatement, MethodGroup
+from ast import Method, Statement, LoopStatement, IfStatement, ReturnStatement, Block, BreakStatement, ContinueStatement
 from phase import Phase
 from report import Report
 from symbol import SymbolTable
@@ -22,22 +22,14 @@ def is_terminal(statement: Statement) -> bool:
     return False
 
 
-# TODO unwrap always true/false conditions
-# TODO unwrap unnecessary casts
 class ControlFlowAnalyse(Phase):
     def run(self):
         Report().begin("ControlFlowAnalyse")
 
         for cls in SymbolTable().get_classes():
-            Report().report('analyse {}'.format(cls.qualified_name))
-            for member in cls.members.values():
-                if isinstance(member, MethodGroup):
-                    for method in member.methods:
-                        self.analyse(method)
-
-            for member in cls.static_members.values():
-                for method in member.methods:
-                    self.analyse(method)
+            Report().report('analyse {}'.format(cls))
+            for method in cls.methods + cls.static_methods:
+                self.analyse(method)
 
         Report().end()
 
