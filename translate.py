@@ -84,13 +84,12 @@ class Translate(Phase):
     def run(self):
         Report().begin("Translate")
         for cls in SymbolTable().get_classes():
-            self.translate(cls)
+            Report().report('translate {}'.format(cls.qualified_name), lambda: self.translate(cls))
         Report().end()
 
         Context().nodes = {}
 
     def translate(self, cls: Class):
-        print('translate', cls)
         self.current_class = cls
         self.this_var = Variable('this', ObjectType(self.current_class))
         self.super_var = Variable('super', ObjectType(self.current_class.superclass))
@@ -157,7 +156,7 @@ class Translate(Phase):
                 if isinstance(right_type, ObjectType):
                     if right_type.cls != string:
                         right_type = PLAY_PACKAGE.children['Object']
-                return MethodCall(ClassExpr(string), lookup_method(string, 'concat', [right_type], is_static=True))
+                return MethodCall(ClassExpr(string), lookup_method(string, 'concat', [right_type], is_static=True), [right])
             assert_type(left.type, NUMBERS)
             assert_type(right.type, NUMBERS)
             type = upper_type(left.type, right.type)

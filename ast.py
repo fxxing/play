@@ -274,14 +274,14 @@ class Block(Statement):
 class LoopStatement(Statement):
     fields = ('block',)
 
-    def __init__(self, expression: Expr, block: Block):
-        self.expression = expression
+    def __init__(self, expr: Expr, block: Block):
+        self.expr = expr
         self.block = block
 
 
 class WhileStatement(LoopStatement):
-    def __init__(self, expression: Expr, block: Block):
-        super().__init__(expression, block)
+    def __init__(self, expr: Expr, block: Block):
+        super().__init__(expr, block)
 
 
 class BreakStatement(Statement):
@@ -295,8 +295,8 @@ class ContinueStatement(Statement):
 class IfStatement(Statement):
     fields = ('block', 'otherwise')
 
-    def __init__(self, expression: Expr, then: Block, otherwise: Optional[Block]):
-        self.expression = expression
+    def __init__(self, expr: Expr, then: Block, otherwise: Optional[Block]):
+        self.expr = expr
         self.then = then
         self.otherwise = otherwise
 
@@ -308,8 +308,8 @@ class AssignStatement(Statement):
 
 
 class ReturnStatement(Statement):
-    def __init__(self, expression: Expr):
-        self.expression = expression
+    def __init__(self, expr: Expr):
+        self.expr = expr
 
 
 # class ThrowStatement(Statement):

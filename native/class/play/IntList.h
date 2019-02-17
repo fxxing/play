@@ -5,8 +5,8 @@
 #include <play.h>
 
 Class(play_IntList, {
-    int length;
-    int *items;
+    pint length;
+    pint *items;
 });
 
 NATIVE pint play_IntList_get_I_I(play_IntList this, pint index);

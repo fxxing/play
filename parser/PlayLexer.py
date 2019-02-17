@@ -1,9 +1,9 @@
 # Generated from /Users/fxxing/git/play/parser/Play.g4 by ANTLR 4.7.2
-from antlr4 import *
-from io import StringIO
-from typing.io import TextIO
 import sys
+from io import StringIO
 
+from antlr4 import *
+from typing.io import TextIO
 
 
 def serializedATN():
@@ -341,10 +341,9 @@ def serializedATN():
 
 
 class PlayLexer(Lexer):
-
     atn = ATNDeserializer().deserialize(serializedATN())
 
-    decisionsToDFA = [ DFA(ds, i) for i, ds in enumerate(atn.decisionToState) ]
+    decisionsToDFA = [DFA(ds, i) for i, ds in enumerate(atn.decisionToState)]
 
     BOOLEAN = 1
     BYTE = 2
@@ -437,66 +436,64 @@ class PlayLexer(Lexer):
     LINE_COMMENT = 89
     IDENTIFIER = 90
 
-    channelNames = [ u"DEFAULT_TOKEN_CHANNEL", u"HIDDEN" ]
+    channelNames = [u"DEFAULT_TOKEN_CHANNEL", u"HIDDEN"]
 
-    modeNames = [ "DEFAULT_MODE" ]
+    modeNames = ["DEFAULT_MODE"]
 
-    literalNames = [ "<INVALID>",
-            "'boolean'", "'byte'", "'short'", "'int'", "'long'", "'float'", 
-            "'double'", "'import'", "'class'", "'interface'", "'def'", "'static'", 
-            "'native'", "'this'", "'super'", "'if'", "'else'", "'elif'", 
-            "'in'", "'while'", "'break'", "'continue'", "'return'", "'try'", 
-            "'catch'", "'finally'", "'throw'", "'throws'", "'as'", "'new'", 
-            "'null'", "'('", "')'", "'{'", "'}'", "'['", "']'", "','", "'.'", 
-            "'::'", "':'", "'->'", "'@'", "'+'", "'-'", "'*'", "'/'", "'%'", 
-            "'=='", "'!='", "'>'", "'<'", "'<='", "'>='", "'&&'", "'||'", 
-            "'!'", "'<<'", "'>>'", "'>>>'", "'&'", "'|'", "'~'", "'^'", 
-            "'='", "'+='", "'-='", "'*='", "'/='", "'%='", "'&&='", "'||='", 
-            "'&='", "'|='", "'^='", "'<<='", "'>>='", "'>>>='" ]
+    literalNames = ["<INVALID>",
+                    "'boolean'", "'byte'", "'short'", "'int'", "'long'", "'float'",
+                    "'double'", "'import'", "'class'", "'interface'", "'def'", "'static'",
+                    "'native'", "'this'", "'super'", "'if'", "'else'", "'elif'",
+                    "'in'", "'while'", "'break'", "'continue'", "'return'", "'try'",
+                    "'catch'", "'finally'", "'throw'", "'throws'", "'as'", "'new'",
+                    "'null'", "'('", "')'", "'{'", "'}'", "'['", "']'", "','", "'.'",
+                    "'::'", "':'", "'->'", "'@'", "'+'", "'-'", "'*'", "'/'", "'%'",
+                    "'=='", "'!='", "'>'", "'<'", "'<='", "'>='", "'&&'", "'||'",
+                    "'!'", "'<<'", "'>>'", "'>>>'", "'&'", "'|'", "'~'", "'^'",
+                    "'='", "'+='", "'-='", "'*='", "'/='", "'%='", "'&&='", "'||='",
+                    "'&='", "'|='", "'^='", "'<<='", "'>>='", "'>>>='"]
 
-    symbolicNames = [ "<INVALID>",
-            "BOOLEAN", "BYTE", "SHORT", "INT", "LONG", "FLOAT", "DOUBLE", 
-            "IMPORT", "CLASS", "INTERFACE", "DEF", "STATIC", "NATIVE", "THIS", 
-            "SUPER", "IF", "ELSE", "ELIF", "IN", "WHILE", "BREAK", "CONTINUE", 
-            "RETURN", "TRY", "CATCH", "FINALLY", "THROW", "THROWS", "AS", 
-            "NEW", "DECIMAL_LITERAL", "HEX_LITERAL", "OCT_LITERAL", "BINARY_LITERAL", 
-            "FLOAT_LITERAL", "BOOL_LITERAL", "BYTE_LITERAL", "STRING_LITERAL", 
-            "NULL_LITERAL", "LPAREN", "RPAREN", "LBRACE", "RBRACE", "LBRACK", 
-            "RBRACK", "COMMA", "DOT", "COLONCOLON", "COLON", "ARROW", "AT", 
-            "ADD", "SUB", "MUL", "DIV", "MOD", "EQUAL", "NOTEQUAL", "GT", 
-            "LT", "LE", "GE", "AND", "OR", "BANG", "LSHIFT", "RSHIFT", "URSHIFT", 
-            "BITAND", "BITOR", "TILDE", "CARET", "ASSIGN", "ADD_ASSIGN", 
-            "SUB_ASSIGN", "MUL_ASSIGN", "DIV_ASSIGN", "MOD_ASSIGN", "AND_ASSIGN", 
-            "OR_ASSIGN", "BITAND_ASSIGN", "BITOR_ASSIGN", "BITXOR_ASSIGN", 
-            "LSHIFT_ASSIGN", "RSHIFT_ASSIGN", "URSHIFT_ASSIGN", "WS", "COMMENT", 
-            "LINE_COMMENT", "IDENTIFIER" ]
+    symbolicNames = ["<INVALID>",
+                     "BOOLEAN", "BYTE", "SHORT", "INT", "LONG", "FLOAT", "DOUBLE",
+                     "IMPORT", "CLASS", "INTERFACE", "DEF", "STATIC", "NATIVE", "THIS",
+                     "SUPER", "IF", "ELSE", "ELIF", "IN", "WHILE", "BREAK", "CONTINUE",
+                     "RETURN", "TRY", "CATCH", "FINALLY", "THROW", "THROWS", "AS",
+                     "NEW", "DECIMAL_LITERAL", "HEX_LITERAL", "OCT_LITERAL", "BINARY_LITERAL",
+                     "FLOAT_LITERAL", "BOOL_LITERAL", "BYTE_LITERAL", "STRING_LITERAL",
+                     "NULL_LITERAL", "LPAREN", "RPAREN", "LBRACE", "RBRACE", "LBRACK",
+                     "RBRACK", "COMMA", "DOT", "COLONCOLON", "COLON", "ARROW", "AT",
+                     "ADD", "SUB", "MUL", "DIV", "MOD", "EQUAL", "NOTEQUAL", "GT",
+                     "LT", "LE", "GE", "AND", "OR", "BANG", "LSHIFT", "RSHIFT", "URSHIFT",
+                     "BITAND", "BITOR", "TILDE", "CARET", "ASSIGN", "ADD_ASSIGN",
+                     "SUB_ASSIGN", "MUL_ASSIGN", "DIV_ASSIGN", "MOD_ASSIGN", "AND_ASSIGN",
+                     "OR_ASSIGN", "BITAND_ASSIGN", "BITOR_ASSIGN", "BITXOR_ASSIGN",
+                     "LSHIFT_ASSIGN", "RSHIFT_ASSIGN", "URSHIFT_ASSIGN", "WS", "COMMENT",
+                     "LINE_COMMENT", "IDENTIFIER"]
 
-    ruleNames = [ "BOOLEAN", "BYTE", "SHORT", "INT", "LONG", "FLOAT", "DOUBLE", 
-                  "IMPORT", "CLASS", "INTERFACE", "DEF", "STATIC", "NATIVE", 
-                  "THIS", "SUPER", "IF", "ELSE", "ELIF", "IN", "WHILE", 
-                  "BREAK", "CONTINUE", "RETURN", "TRY", "CATCH", "FINALLY", 
-                  "THROW", "THROWS", "AS", "NEW", "DECIMAL_LITERAL", "HEX_LITERAL", 
-                  "OCT_LITERAL", "BINARY_LITERAL", "FLOAT_LITERAL", "BOOL_LITERAL", 
-                  "BYTE_LITERAL", "STRING_LITERAL", "NULL_LITERAL", "LPAREN", 
-                  "RPAREN", "LBRACE", "RBRACE", "LBRACK", "RBRACK", "COMMA", 
-                  "DOT", "COLONCOLON", "COLON", "ARROW", "AT", "ADD", "SUB", 
-                  "MUL", "DIV", "MOD", "EQUAL", "NOTEQUAL", "GT", "LT", 
-                  "LE", "GE", "AND", "OR", "BANG", "LSHIFT", "RSHIFT", "URSHIFT", 
-                  "BITAND", "BITOR", "TILDE", "CARET", "ASSIGN", "ADD_ASSIGN", 
-                  "SUB_ASSIGN", "MUL_ASSIGN", "DIV_ASSIGN", "MOD_ASSIGN", 
-                  "AND_ASSIGN", "OR_ASSIGN", "BITAND_ASSIGN", "BITOR_ASSIGN", 
-                  "BITXOR_ASSIGN", "LSHIFT_ASSIGN", "RSHIFT_ASSIGN", "URSHIFT_ASSIGN", 
-                  "WS", "COMMENT", "LINE_COMMENT", "IDENTIFIER", "ExponentPart", 
-                  "EscapeSequence", "HexDigits", "HexDigit", "Digits", "LetterOrDigit", 
-                  "Letter" ]
+    ruleNames = ["BOOLEAN", "BYTE", "SHORT", "INT", "LONG", "FLOAT", "DOUBLE",
+                 "IMPORT", "CLASS", "INTERFACE", "DEF", "STATIC", "NATIVE",
+                 "THIS", "SUPER", "IF", "ELSE", "ELIF", "IN", "WHILE",
+                 "BREAK", "CONTINUE", "RETURN", "TRY", "CATCH", "FINALLY",
+                 "THROW", "THROWS", "AS", "NEW", "DECIMAL_LITERAL", "HEX_LITERAL",
+                 "OCT_LITERAL", "BINARY_LITERAL", "FLOAT_LITERAL", "BOOL_LITERAL",
+                 "BYTE_LITERAL", "STRING_LITERAL", "NULL_LITERAL", "LPAREN",
+                 "RPAREN", "LBRACE", "RBRACE", "LBRACK", "RBRACK", "COMMA",
+                 "DOT", "COLONCOLON", "COLON", "ARROW", "AT", "ADD", "SUB",
+                 "MUL", "DIV", "MOD", "EQUAL", "NOTEQUAL", "GT", "LT",
+                 "LE", "GE", "AND", "OR", "BANG", "LSHIFT", "RSHIFT", "URSHIFT",
+                 "BITAND", "BITOR", "TILDE", "CARET", "ASSIGN", "ADD_ASSIGN",
+                 "SUB_ASSIGN", "MUL_ASSIGN", "DIV_ASSIGN", "MOD_ASSIGN",
+                 "AND_ASSIGN", "OR_ASSIGN", "BITAND_ASSIGN", "BITOR_ASSIGN",
+                 "BITXOR_ASSIGN", "LSHIFT_ASSIGN", "RSHIFT_ASSIGN", "URSHIFT_ASSIGN",
+                 "WS", "COMMENT", "LINE_COMMENT", "IDENTIFIER", "ExponentPart",
+                 "EscapeSequence", "HexDigits", "HexDigit", "Digits", "LetterOrDigit",
+                 "Letter"]
 
     grammarFileName = "Play.g4"
 
-    def __init__(self, input=None, output:TextIO = sys.stdout):
+    def __init__(self, input=None, output: TextIO = sys.stdout):
         super().__init__(input, output)
         self.checkVersion("4.7.2")
         self._interp = LexerATNSimulator(self, self.atn, self.decisionsToDFA, PredictionContextCache())
         self._actions = None
         self._predicates = None
-
-

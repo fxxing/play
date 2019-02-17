@@ -1,9 +1,10 @@
 # Generated from /Users/fxxing/git/play/parser/Play.g4 by ANTLR 4.7.2
 # encoding: utf-8
-from antlr4 import *
-from io import StringIO
-from typing.io import TextIO
 import sys
+from io import StringIO
+
+from antlr4 import *
+from typing.io import TextIO
 
 
 def serializedATN():
@@ -217,50 +218,49 @@ def serializedATN():
         return buf.getvalue()
 
 
-class PlayParser ( Parser ):
-
+class PlayParser(Parser):
     grammarFileName = "Play.g4"
 
     atn = ATNDeserializer().deserialize(serializedATN())
 
-    decisionsToDFA = [ DFA(ds, i) for i, ds in enumerate(atn.decisionToState) ]
+    decisionsToDFA = [DFA(ds, i) for i, ds in enumerate(atn.decisionToState)]
 
     sharedContextCache = PredictionContextCache()
 
-    literalNames = [ "<INVALID>", "'boolean'", "'byte'", "'short'", "'int'", 
-                     "'long'", "'float'", "'double'", "'import'", "'class'", 
-                     "'interface'", "'def'", "'static'", "'native'", "'this'", 
-                     "'super'", "'if'", "'else'", "'elif'", "'in'", "'while'", 
-                     "'break'", "'continue'", "'return'", "'try'", "'catch'", 
-                     "'finally'", "'throw'", "'throws'", "'as'", "'new'", 
-                     "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
-                     "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
-                     "'null'", "'('", "')'", "'{'", "'}'", "'['", "']'", 
-                     "','", "'.'", "'::'", "':'", "'->'", "'@'", "'+'", 
-                     "'-'", "'*'", "'/'", "'%'", "'=='", "'!='", "'>'", 
-                     "'<'", "'<='", "'>='", "'&&'", "'||'", "'!'", "'<<'", 
-                     "'>>'", "'>>>'", "'&'", "'|'", "'~'", "'^'", "'='", 
-                     "'+='", "'-='", "'*='", "'/='", "'%='", "'&&='", "'||='", 
-                     "'&='", "'|='", "'^='", "'<<='", "'>>='", "'>>>='" ]
+    literalNames = ["<INVALID>", "'boolean'", "'byte'", "'short'", "'int'",
+                    "'long'", "'float'", "'double'", "'import'", "'class'",
+                    "'interface'", "'def'", "'static'", "'native'", "'this'",
+                    "'super'", "'if'", "'else'", "'elif'", "'in'", "'while'",
+                    "'break'", "'continue'", "'return'", "'try'", "'catch'",
+                    "'finally'", "'throw'", "'throws'", "'as'", "'new'",
+                    "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>",
+                    "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>",
+                    "'null'", "'('", "')'", "'{'", "'}'", "'['", "']'",
+                    "','", "'.'", "'::'", "':'", "'->'", "'@'", "'+'",
+                    "'-'", "'*'", "'/'", "'%'", "'=='", "'!='", "'>'",
+                    "'<'", "'<='", "'>='", "'&&'", "'||'", "'!'", "'<<'",
+                    "'>>'", "'>>>'", "'&'", "'|'", "'~'", "'^'", "'='",
+                    "'+='", "'-='", "'*='", "'/='", "'%='", "'&&='", "'||='",
+                    "'&='", "'|='", "'^='", "'<<='", "'>>='", "'>>>='"]
 
-    symbolicNames = [ "<INVALID>", "BOOLEAN", "BYTE", "SHORT", "INT", "LONG", 
-                      "FLOAT", "DOUBLE", "IMPORT", "CLASS", "INTERFACE", 
-                      "DEF", "STATIC", "NATIVE", "THIS", "SUPER", "IF", 
-                      "ELSE", "ELIF", "IN", "WHILE", "BREAK", "CONTINUE", 
-                      "RETURN", "TRY", "CATCH", "FINALLY", "THROW", "THROWS", 
-                      "AS", "NEW", "DECIMAL_LITERAL", "HEX_LITERAL", "OCT_LITERAL", 
-                      "BINARY_LITERAL", "FLOAT_LITERAL", "BOOL_LITERAL", 
-                      "BYTE_LITERAL", "STRING_LITERAL", "NULL_LITERAL", 
-                      "LPAREN", "RPAREN", "LBRACE", "RBRACE", "LBRACK", 
-                      "RBRACK", "COMMA", "DOT", "COLONCOLON", "COLON", "ARROW", 
-                      "AT", "ADD", "SUB", "MUL", "DIV", "MOD", "EQUAL", 
-                      "NOTEQUAL", "GT", "LT", "LE", "GE", "AND", "OR", "BANG", 
-                      "LSHIFT", "RSHIFT", "URSHIFT", "BITAND", "BITOR", 
-                      "TILDE", "CARET", "ASSIGN", "ADD_ASSIGN", "SUB_ASSIGN", 
-                      "MUL_ASSIGN", "DIV_ASSIGN", "MOD_ASSIGN", "AND_ASSIGN", 
-                      "OR_ASSIGN", "BITAND_ASSIGN", "BITOR_ASSIGN", "BITXOR_ASSIGN", 
-                      "LSHIFT_ASSIGN", "RSHIFT_ASSIGN", "URSHIFT_ASSIGN", 
-                      "WS", "COMMENT", "LINE_COMMENT", "IDENTIFIER" ]
+    symbolicNames = ["<INVALID>", "BOOLEAN", "BYTE", "SHORT", "INT", "LONG",
+                     "FLOAT", "DOUBLE", "IMPORT", "CLASS", "INTERFACE",
+                     "DEF", "STATIC", "NATIVE", "THIS", "SUPER", "IF",
+                     "ELSE", "ELIF", "IN", "WHILE", "BREAK", "CONTINUE",
+                     "RETURN", "TRY", "CATCH", "FINALLY", "THROW", "THROWS",
+                     "AS", "NEW", "DECIMAL_LITERAL", "HEX_LITERAL", "OCT_LITERAL",
+                     "BINARY_LITERAL", "FLOAT_LITERAL", "BOOL_LITERAL",
+                     "BYTE_LITERAL", "STRING_LITERAL", "NULL_LITERAL",
+                     "LPAREN", "RPAREN", "LBRACE", "RBRACE", "LBRACK",
+                     "RBRACK", "COMMA", "DOT", "COLONCOLON", "COLON", "ARROW",
+                     "AT", "ADD", "SUB", "MUL", "DIV", "MOD", "EQUAL",
+                     "NOTEQUAL", "GT", "LT", "LE", "GE", "AND", "OR", "BANG",
+                     "LSHIFT", "RSHIFT", "URSHIFT", "BITAND", "BITOR",
+                     "TILDE", "CARET", "ASSIGN", "ADD_ASSIGN", "SUB_ASSIGN",
+                     "MUL_ASSIGN", "DIV_ASSIGN", "MOD_ASSIGN", "AND_ASSIGN",
+                     "OR_ASSIGN", "BITAND_ASSIGN", "BITOR_ASSIGN", "BITXOR_ASSIGN",
+                     "LSHIFT_ASSIGN", "RSHIFT_ASSIGN", "URSHIFT_ASSIGN",
+                     "WS", "COMMENT", "LINE_COMMENT", "IDENTIFIER"]
 
     RULE_compilationUnit = 0
     RULE_qualifiedName = 1
@@ -303,157 +303,149 @@ class PlayParser ( Parser ):
     RULE_methodCall = 38
     RULE_expressionList = 39
 
-    ruleNames =  [ "compilationUnit", "qualifiedName", "typeName", "literal", 
-                   "importDeclaration", "classDeclaration", "memberDeclaration", 
-                   "classTypeList", "classType", "methodDeclaration", "parameters", 
-                   "variable", "fieldDeclaration", "block", "statement", 
-                   "ifStatement", "elifClause", "elseClause", "whileStatement", 
-                   "returnStatement", "breakStatement", "continueStatement", 
-                   "assignStatement", "expression", "logicalOrExpression", 
-                   "logicalAndExpression", "inclusiveOrExpression", "exclusiveOrExpression", 
-                   "andExpression", "equalityExpression", "relationalExpression", 
-                   "shiftExpression", "additiveExpression", "multiplicativeExpression", 
-                   "castExpression", "unaryExpression", "primaryExpression", 
-                   "classCreation", "methodCall", "expressionList" ]
+    ruleNames = ["compilationUnit", "qualifiedName", "typeName", "literal",
+                 "importDeclaration", "classDeclaration", "memberDeclaration",
+                 "classTypeList", "classType", "methodDeclaration", "parameters",
+                 "variable", "fieldDeclaration", "block", "statement",
+                 "ifStatement", "elifClause", "elseClause", "whileStatement",
+                 "returnStatement", "breakStatement", "continueStatement",
+                 "assignStatement", "expression", "logicalOrExpression",
+                 "logicalAndExpression", "inclusiveOrExpression", "exclusiveOrExpression",
+                 "andExpression", "equalityExpression", "relationalExpression",
+                 "shiftExpression", "additiveExpression", "multiplicativeExpression",
+                 "castExpression", "unaryExpression", "primaryExpression",
+                 "classCreation", "methodCall", "expressionList"]
 
     EOF = Token.EOF
-    BOOLEAN=1
-    BYTE=2
-    SHORT=3
-    INT=4
-    LONG=5
-    FLOAT=6
-    DOUBLE=7
-    IMPORT=8
-    CLASS=9
-    INTERFACE=10
-    DEF=11
-    STATIC=12
-    NATIVE=13
-    THIS=14
-    SUPER=15
-    IF=16
-    ELSE=17
-    ELIF=18
-    IN=19
-    WHILE=20
-    BREAK=21
-    CONTINUE=22
-    RETURN=23
-    TRY=24
-    CATCH=25
-    FINALLY=26
-    THROW=27
-    THROWS=28
-    AS=29
-    NEW=30
-    DECIMAL_LITERAL=31
-    HEX_LITERAL=32
-    OCT_LITERAL=33
-    BINARY_LITERAL=34
-    FLOAT_LITERAL=35
-    BOOL_LITERAL=36
-    BYTE_LITERAL=37
-    STRING_LITERAL=38
-    NULL_LITERAL=39
-    LPAREN=40
-    RPAREN=41
-    LBRACE=42
-    RBRACE=43
-    LBRACK=44
-    RBRACK=45
-    COMMA=46
-    DOT=47
-    COLONCOLON=48
-    COLON=49
-    ARROW=50
-    AT=51
-    ADD=52
-    SUB=53
-    MUL=54
-    DIV=55
-    MOD=56
-    EQUAL=57
-    NOTEQUAL=58
-    GT=59
-    LT=60
-    LE=61
-    GE=62
-    AND=63
-    OR=64
-    BANG=65
-    LSHIFT=66
-    RSHIFT=67
-    URSHIFT=68
-    BITAND=69
-    BITOR=70
-    TILDE=71
-    CARET=72
-    ASSIGN=73
-    ADD_ASSIGN=74
-    SUB_ASSIGN=75
-    MUL_ASSIGN=76
-    DIV_ASSIGN=77
-    MOD_ASSIGN=78
-    AND_ASSIGN=79
-    OR_ASSIGN=80
-    BITAND_ASSIGN=81
-    BITOR_ASSIGN=82
-    BITXOR_ASSIGN=83
-    LSHIFT_ASSIGN=84
-    RSHIFT_ASSIGN=85
-    URSHIFT_ASSIGN=86
-    WS=87
-    COMMENT=88
-    LINE_COMMENT=89
-    IDENTIFIER=90
+    BOOLEAN = 1
+    BYTE = 2
+    SHORT = 3
+    INT = 4
+    LONG = 5
+    FLOAT = 6
+    DOUBLE = 7
+    IMPORT = 8
+    CLASS = 9
+    INTERFACE = 10
+    DEF = 11
+    STATIC = 12
+    NATIVE = 13
+    THIS = 14
+    SUPER = 15
+    IF = 16
+    ELSE = 17
+    ELIF = 18
+    IN = 19
+    WHILE = 20
+    BREAK = 21
+    CONTINUE = 22
+    RETURN = 23
+    TRY = 24
+    CATCH = 25
+    FINALLY = 26
+    THROW = 27
+    THROWS = 28
+    AS = 29
+    NEW = 30
+    DECIMAL_LITERAL = 31
+    HEX_LITERAL = 32
+    OCT_LITERAL = 33
+    BINARY_LITERAL = 34
+    FLOAT_LITERAL = 35
+    BOOL_LITERAL = 36
+    BYTE_LITERAL = 37
+    STRING_LITERAL = 38
+    NULL_LITERAL = 39
+    LPAREN = 40
+    RPAREN = 41
+    LBRACE = 42
+    RBRACE = 43
+    LBRACK = 44
+    RBRACK = 45
+    COMMA = 46
+    DOT = 47
+    COLONCOLON = 48
+    COLON = 49
+    ARROW = 50
+    AT = 51
+    ADD = 52
+    SUB = 53
+    MUL = 54
+    DIV = 55
+    MOD = 56
+    EQUAL = 57
+    NOTEQUAL = 58
+    GT = 59
+    LT = 60
+    LE = 61
+    GE = 62
+    AND = 63
+    OR = 64
+    BANG = 65
+    LSHIFT = 66
+    RSHIFT = 67
+    URSHIFT = 68
+    BITAND = 69
+    BITOR = 70
+    TILDE = 71
+    CARET = 72
+    ASSIGN = 73
+    ADD_ASSIGN = 74
+    SUB_ASSIGN = 75
+    MUL_ASSIGN = 76
+    DIV_ASSIGN = 77
+    MOD_ASSIGN = 78
+    AND_ASSIGN = 79
+    OR_ASSIGN = 80
+    BITAND_ASSIGN = 81
+    BITOR_ASSIGN = 82
+    BITXOR_ASSIGN = 83
+    LSHIFT_ASSIGN = 84
+    RSHIFT_ASSIGN = 85
+    URSHIFT_ASSIGN = 86
+    WS = 87
+    COMMENT = 88
+    LINE_COMMENT = 89
+    IDENTIFIER = 90
 
-    def __init__(self, input:TokenStream, output:TextIO = sys.stdout):
+    def __init__(self, input: TokenStream, output: TextIO = sys.stdout):
         super().__init__(input, output)
         self.checkVersion("4.7.2")
         self._interp = ParserATNSimulator(self, self.atn, self.decisionsToDFA, self.sharedContextCache)
         self._predicates = None
 
-
-
-
     class CompilationUnitContext(ParserRuleContext):
 
-        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
         def classDeclaration(self):
-            return self.getTypedRuleContext(PlayParser.ClassDeclarationContext,0)
-
+            return self.getTypedRuleContext(PlayParser.ClassDeclarationContext, 0)
 
         def EOF(self):
             return self.getToken(PlayParser.EOF, 0)
 
-        def importDeclaration(self, i:int=None):
+        def importDeclaration(self, i: int = None):
             if i is None:
                 return self.getTypedRuleContexts(PlayParser.ImportDeclarationContext)
             else:
-                return self.getTypedRuleContext(PlayParser.ImportDeclarationContext,i)
-
+                return self.getTypedRuleContext(PlayParser.ImportDeclarationContext, i)
 
         def getRuleIndex(self):
             return PlayParser.RULE_compilationUnit
-
-
-
 
     def compilationUnit(self):
 
         localctx = PlayParser.CompilationUnitContext(self, self._ctx, self.state)
         self.enterRule(localctx, 0, self.RULE_compilationUnit)
-        self._la = 0 # Token type
+        self._la = 0  # Token type
         try:
             self.enterOuterAlt(localctx, 1)
             self.state = 83
             self._errHandler.sync(self)
             _la = self._input.LA(1)
-            while _la==PlayParser.IMPORT:
+            while _la == PlayParser.IMPORT:
                 self.state = 80
                 self.importDeclaration()
                 self.state = 85
@@ -472,20 +464,19 @@ class PlayParser ( Parser ):
             self.exitRule()
         return localctx
 
-
     class QualifiedNameContext(ParserRuleContext):
 
-        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
-        def IDENTIFIER(self, i:int=None):
+        def IDENTIFIER(self, i: int = None):
             if i is None:
                 return self.getTokens(PlayParser.IDENTIFIER)
             else:
                 return self.getToken(PlayParser.IDENTIFIER, i)
 
-        def DOT(self, i:int=None):
+        def DOT(self, i: int = None):
             if i is None:
                 return self.getTokens(PlayParser.DOT)
             else:
@@ -494,14 +485,11 @@ class PlayParser ( Parser ):
         def getRuleIndex(self):
             return PlayParser.RULE_qualifiedName
 
-
-
-
     def qualifiedName(self):
 
         localctx = PlayParser.QualifiedNameContext(self, self._ctx, self.state)
         self.enterRule(localctx, 2, self.RULE_qualifiedName)
-        self._la = 0 # Token type
+        self._la = 0  # Token type
         try:
             self.enterOuterAlt(localctx, 1)
             self.state = 89
@@ -509,7 +497,7 @@ class PlayParser ( Parser ):
             self.state = 94
             self._errHandler.sync(self)
             _la = self._input.LA(1)
-            while _la==PlayParser.DOT:
+            while _la == PlayParser.DOT:
                 self.state = 90
                 self.match(PlayParser.DOT)
                 self.state = 91
@@ -526,10 +514,9 @@ class PlayParser ( Parser ):
             self.exitRule()
         return localctx
 
-
     class TypeNameContext(ParserRuleContext):
 
-        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -555,14 +542,10 @@ class PlayParser ( Parser ):
             return self.getToken(PlayParser.DOUBLE, 0)
 
         def classType(self):
-            return self.getTypedRuleContext(PlayParser.ClassTypeContext,0)
-
+            return self.getTypedRuleContext(PlayParser.ClassTypeContext, 0)
 
         def getRuleIndex(self):
             return PlayParser.RULE_typeName
-
-
-
 
     def typeName(self):
 
@@ -623,10 +606,9 @@ class PlayParser ( Parser ):
             self.exitRule()
         return localctx
 
-
     class LiteralContext(ParserRuleContext):
 
-        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -660,19 +642,18 @@ class PlayParser ( Parser ):
         def getRuleIndex(self):
             return PlayParser.RULE_literal
 
-
-
-
     def literal(self):
 
         localctx = PlayParser.LiteralContext(self, self._ctx, self.state)
         self.enterRule(localctx, 6, self.RULE_literal)
-        self._la = 0 # Token type
+        self._la = 0  # Token type
         try:
             self.enterOuterAlt(localctx, 1)
             self.state = 107
             _la = self._input.LA(1)
-            if not((((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << PlayParser.DECIMAL_LITERAL) | (1 << PlayParser.HEX_LITERAL) | (1 << PlayParser.OCT_LITERAL) | (1 << PlayParser.BINARY_LITERAL) | (1 << PlayParser.FLOAT_LITERAL) | (1 << PlayParser.BOOL_LITERAL) | (1 << PlayParser.BYTE_LITERAL) | (1 << PlayParser.STRING_LITERAL) | (1 << PlayParser.NULL_LITERAL))) != 0)):
+            if not ((((_la) & ~0x3f) == 0 and ((1 << _la) & (
+                    (1 << PlayParser.DECIMAL_LITERAL) | (1 << PlayParser.HEX_LITERAL) | (1 << PlayParser.OCT_LITERAL) | (1 << PlayParser.BINARY_LITERAL) | (1 << PlayParser.FLOAT_LITERAL) | (
+                    1 << PlayParser.BOOL_LITERAL) | (1 << PlayParser.BYTE_LITERAL) | (1 << PlayParser.STRING_LITERAL) | (1 << PlayParser.NULL_LITERAL))) != 0)):
                 self._errHandler.recoverInline(self)
             else:
                 self._errHandler.reportMatch(self)
@@ -685,10 +666,9 @@ class PlayParser ( Parser ):
             self.exitRule()
         return localctx
 
-
     class ImportDeclarationContext(ParserRuleContext):
 
-        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -696,14 +676,10 @@ class PlayParser ( Parser ):
             return self.getToken(PlayParser.IMPORT, 0)
 
         def qualifiedName(self):
-            return self.getTypedRuleContext(PlayParser.QualifiedNameContext,0)
-
+            return self.getTypedRuleContext(PlayParser.QualifiedNameContext, 0)
 
         def getRuleIndex(self):
             return PlayParser.RULE_importDeclaration
-
-
-
 
     def importDeclaration(self):
 
@@ -723,10 +699,9 @@ class PlayParser ( Parser ):
             self.exitRule()
         return localctx
 
-
     class ClassDeclarationContext(ParserRuleContext):
 
-        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -752,40 +727,34 @@ class PlayParser ( Parser ):
             return self.getToken(PlayParser.COLON, 0)
 
         def classTypeList(self):
-            return self.getTypedRuleContext(PlayParser.ClassTypeListContext,0)
+            return self.getTypedRuleContext(PlayParser.ClassTypeListContext, 0)
 
-
-        def memberDeclaration(self, i:int=None):
+        def memberDeclaration(self, i: int = None):
             if i is None:
                 return self.getTypedRuleContexts(PlayParser.MemberDeclarationContext)
             else:
-                return self.getTypedRuleContext(PlayParser.MemberDeclarationContext,i)
-
+                return self.getTypedRuleContext(PlayParser.MemberDeclarationContext, i)
 
         def getRuleIndex(self):
             return PlayParser.RULE_classDeclaration
-
-
-
 
     def classDeclaration(self):
 
         localctx = PlayParser.ClassDeclarationContext(self, self._ctx, self.state)
         self.enterRule(localctx, 10, self.RULE_classDeclaration)
-        self._la = 0 # Token type
+        self._la = 0  # Token type
         try:
             self.enterOuterAlt(localctx, 1)
             self.state = 113
             self._errHandler.sync(self)
             _la = self._input.LA(1)
-            if _la==PlayParser.NATIVE:
+            if _la == PlayParser.NATIVE:
                 self.state = 112
                 self.match(PlayParser.NATIVE)
 
-
             self.state = 115
             _la = self._input.LA(1)
-            if not(_la==PlayParser.CLASS or _la==PlayParser.INTERFACE):
+            if not (_la == PlayParser.CLASS or _la == PlayParser.INTERFACE):
                 self._errHandler.recoverInline(self)
             else:
                 self._errHandler.reportMatch(self)
@@ -795,19 +764,18 @@ class PlayParser ( Parser ):
             self.state = 119
             self._errHandler.sync(self)
             _la = self._input.LA(1)
-            if _la==PlayParser.COLON:
+            if _la == PlayParser.COLON:
                 self.state = 117
                 self.match(PlayParser.COLON)
                 self.state = 118
                 self.classTypeList()
-
 
             self.state = 121
             self.match(PlayParser.LBRACE)
             self.state = 125
             self._errHandler.sync(self)
             _la = self._input.LA(1)
-            while (((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << PlayParser.DEF) | (1 << PlayParser.STATIC) | (1 << PlayParser.NATIVE))) != 0) or _la==PlayParser.IDENTIFIER:
+            while (((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << PlayParser.DEF) | (1 << PlayParser.STATIC) | (1 << PlayParser.NATIVE))) != 0) or _la == PlayParser.IDENTIFIER:
                 self.state = 122
                 self.memberDeclaration()
                 self.state = 127
@@ -824,26 +792,20 @@ class PlayParser ( Parser ):
             self.exitRule()
         return localctx
 
-
     class MemberDeclarationContext(ParserRuleContext):
 
-        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
         def methodDeclaration(self):
-            return self.getTypedRuleContext(PlayParser.MethodDeclarationContext,0)
-
+            return self.getTypedRuleContext(PlayParser.MethodDeclarationContext, 0)
 
         def fieldDeclaration(self):
-            return self.getTypedRuleContext(PlayParser.FieldDeclarationContext,0)
-
+            return self.getTypedRuleContext(PlayParser.FieldDeclarationContext, 0)
 
         def getRuleIndex(self):
             return PlayParser.RULE_memberDeclaration
-
-
-
 
     def memberDeclaration(self):
 
@@ -874,21 +836,19 @@ class PlayParser ( Parser ):
             self.exitRule()
         return localctx
 
-
     class ClassTypeListContext(ParserRuleContext):
 
-        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
-        def classType(self, i:int=None):
+        def classType(self, i: int = None):
             if i is None:
                 return self.getTypedRuleContexts(PlayParser.ClassTypeContext)
             else:
-                return self.getTypedRuleContext(PlayParser.ClassTypeContext,i)
+                return self.getTypedRuleContext(PlayParser.ClassTypeContext, i)
 
-
-        def COMMA(self, i:int=None):
+        def COMMA(self, i: int = None):
             if i is None:
                 return self.getTokens(PlayParser.COMMA)
             else:
@@ -897,14 +857,11 @@ class PlayParser ( Parser ):
         def getRuleIndex(self):
             return PlayParser.RULE_classTypeList
 
-
-
-
     def classTypeList(self):
 
         localctx = PlayParser.ClassTypeListContext(self, self._ctx, self.state)
         self.enterRule(localctx, 14, self.RULE_classTypeList)
-        self._la = 0 # Token type
+        self._la = 0  # Token type
         try:
             self.enterOuterAlt(localctx, 1)
             self.state = 134
@@ -912,7 +869,7 @@ class PlayParser ( Parser ):
             self.state = 139
             self._errHandler.sync(self)
             _la = self._input.LA(1)
-            while _la==PlayParser.COMMA:
+            while _la == PlayParser.COMMA:
                 self.state = 135
                 self.match(PlayParser.COMMA)
                 self.state = 136
@@ -929,10 +886,9 @@ class PlayParser ( Parser ):
             self.exitRule()
         return localctx
 
-
     class ClassTypeContext(ParserRuleContext):
 
-        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -941,9 +897,6 @@ class PlayParser ( Parser ):
 
         def getRuleIndex(self):
             return PlayParser.RULE_classType
-
-
-
 
     def classType(self):
 
@@ -961,10 +914,9 @@ class PlayParser ( Parser ):
             self.exitRule()
         return localctx
 
-
     class MethodDeclarationContext(ParserRuleContext):
 
-        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -987,48 +939,40 @@ class PlayParser ( Parser ):
             return self.getToken(PlayParser.STATIC, 0)
 
         def parameters(self):
-            return self.getTypedRuleContext(PlayParser.ParametersContext,0)
-
+            return self.getTypedRuleContext(PlayParser.ParametersContext, 0)
 
         def ARROW(self):
             return self.getToken(PlayParser.ARROW, 0)
 
         def typeName(self):
-            return self.getTypedRuleContext(PlayParser.TypeNameContext,0)
-
+            return self.getTypedRuleContext(PlayParser.TypeNameContext, 0)
 
         def block(self):
-            return self.getTypedRuleContext(PlayParser.BlockContext,0)
-
+            return self.getTypedRuleContext(PlayParser.BlockContext, 0)
 
         def getRuleIndex(self):
             return PlayParser.RULE_methodDeclaration
-
-
-
 
     def methodDeclaration(self):
 
         localctx = PlayParser.MethodDeclarationContext(self, self._ctx, self.state)
         self.enterRule(localctx, 18, self.RULE_methodDeclaration)
-        self._la = 0 # Token type
+        self._la = 0  # Token type
         try:
             self.enterOuterAlt(localctx, 1)
             self.state = 145
             self._errHandler.sync(self)
             _la = self._input.LA(1)
-            if _la==PlayParser.NATIVE:
+            if _la == PlayParser.NATIVE:
                 self.state = 144
                 self.match(PlayParser.NATIVE)
-
 
             self.state = 148
             self._errHandler.sync(self)
             _la = self._input.LA(1)
-            if _la==PlayParser.STATIC:
+            if _la == PlayParser.STATIC:
                 self.state = 147
                 self.match(PlayParser.STATIC)
-
 
             self.state = 150
             self.match(PlayParser.DEF)
@@ -1039,27 +983,25 @@ class PlayParser ( Parser ):
             self.state = 154
             self._errHandler.sync(self)
             _la = self._input.LA(1)
-            if _la==PlayParser.IDENTIFIER:
+            if _la == PlayParser.IDENTIFIER:
                 self.state = 153
                 self.parameters()
-
 
             self.state = 156
             self.match(PlayParser.RPAREN)
             self.state = 159
             self._errHandler.sync(self)
             _la = self._input.LA(1)
-            if _la==PlayParser.ARROW:
+            if _la == PlayParser.ARROW:
                 self.state = 157
                 self.match(PlayParser.ARROW)
                 self.state = 158
                 self.typeName()
 
-
             self.state = 162
             self._errHandler.sync(self)
             _la = self._input.LA(1)
-            if _la==PlayParser.LBRACE:
+            if _la == PlayParser.LBRACE:
                 self.state = 161
                 self.block()
 
@@ -1072,21 +1014,19 @@ class PlayParser ( Parser ):
             self.exitRule()
         return localctx
 
-
     class ParametersContext(ParserRuleContext):
 
-        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
-        def variable(self, i:int=None):
+        def variable(self, i: int = None):
             if i is None:
                 return self.getTypedRuleContexts(PlayParser.VariableContext)
             else:
-                return self.getTypedRuleContext(PlayParser.VariableContext,i)
+                return self.getTypedRuleContext(PlayParser.VariableContext, i)
 
-
-        def COMMA(self, i:int=None):
+        def COMMA(self, i: int = None):
             if i is None:
                 return self.getTokens(PlayParser.COMMA)
             else:
@@ -1095,14 +1035,11 @@ class PlayParser ( Parser ):
         def getRuleIndex(self):
             return PlayParser.RULE_parameters
 
-
-
-
     def parameters(self):
 
         localctx = PlayParser.ParametersContext(self, self._ctx, self.state)
         self.enterRule(localctx, 20, self.RULE_parameters)
-        self._la = 0 # Token type
+        self._la = 0  # Token type
         try:
             self.enterOuterAlt(localctx, 1)
             self.state = 164
@@ -1110,7 +1047,7 @@ class PlayParser ( Parser ):
             self.state = 169
             self._errHandler.sync(self)
             _la = self._input.LA(1)
-            while _la==PlayParser.COMMA:
+            while _la == PlayParser.COMMA:
                 self.state = 165
                 self.match(PlayParser.COMMA)
                 self.state = 166
@@ -1127,10 +1064,9 @@ class PlayParser ( Parser ):
             self.exitRule()
         return localctx
 
-
     class VariableContext(ParserRuleContext):
 
-        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -1141,14 +1077,10 @@ class PlayParser ( Parser ):
             return self.getToken(PlayParser.COLON, 0)
 
         def typeName(self):
-            return self.getTypedRuleContext(PlayParser.TypeNameContext,0)
-
+            return self.getTypedRuleContext(PlayParser.TypeNameContext, 0)
 
         def getRuleIndex(self):
             return PlayParser.RULE_variable
-
-
-
 
     def variable(self):
 
@@ -1170,35 +1102,29 @@ class PlayParser ( Parser ):
             self.exitRule()
         return localctx
 
-
     class FieldDeclarationContext(ParserRuleContext):
 
-        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
         def variable(self):
-            return self.getTypedRuleContext(PlayParser.VariableContext,0)
-
+            return self.getTypedRuleContext(PlayParser.VariableContext, 0)
 
         def ASSIGN(self):
             return self.getToken(PlayParser.ASSIGN, 0)
 
         def expression(self):
-            return self.getTypedRuleContext(PlayParser.ExpressionContext,0)
-
+            return self.getTypedRuleContext(PlayParser.ExpressionContext, 0)
 
         def getRuleIndex(self):
             return PlayParser.RULE_fieldDeclaration
-
-
-
 
     def fieldDeclaration(self):
 
         localctx = PlayParser.FieldDeclarationContext(self, self._ctx, self.state)
         self.enterRule(localctx, 24, self.RULE_fieldDeclaration)
-        self._la = 0 # Token type
+        self._la = 0  # Token type
         try:
             self.enterOuterAlt(localctx, 1)
             self.state = 176
@@ -1206,7 +1132,7 @@ class PlayParser ( Parser ):
             self.state = 179
             self._errHandler.sync(self)
             _la = self._input.LA(1)
-            if _la==PlayParser.ASSIGN:
+            if _la == PlayParser.ASSIGN:
                 self.state = 177
                 self.match(PlayParser.ASSIGN)
                 self.state = 178
@@ -1221,10 +1147,9 @@ class PlayParser ( Parser ):
             self.exitRule()
         return localctx
 
-
     class BlockContext(ParserRuleContext):
 
-        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -1234,24 +1159,20 @@ class PlayParser ( Parser ):
         def RBRACE(self):
             return self.getToken(PlayParser.RBRACE, 0)
 
-        def statement(self, i:int=None):
+        def statement(self, i: int = None):
             if i is None:
                 return self.getTypedRuleContexts(PlayParser.StatementContext)
             else:
-                return self.getTypedRuleContext(PlayParser.StatementContext,i)
-
+                return self.getTypedRuleContext(PlayParser.StatementContext, i)
 
         def getRuleIndex(self):
             return PlayParser.RULE_block
-
-
-
 
     def block(self):
 
         localctx = PlayParser.BlockContext(self, self._ctx, self.state)
         self.enterRule(localctx, 26, self.RULE_block)
-        self._la = 0 # Token type
+        self._la = 0  # Token type
         try:
             self.enterOuterAlt(localctx, 1)
             self.state = 181
@@ -1259,7 +1180,12 @@ class PlayParser ( Parser ):
             self.state = 185
             self._errHandler.sync(self)
             _la = self._input.LA(1)
-            while (((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << PlayParser.THIS) | (1 << PlayParser.SUPER) | (1 << PlayParser.IF) | (1 << PlayParser.WHILE) | (1 << PlayParser.BREAK) | (1 << PlayParser.CONTINUE) | (1 << PlayParser.RETURN) | (1 << PlayParser.NEW) | (1 << PlayParser.DECIMAL_LITERAL) | (1 << PlayParser.HEX_LITERAL) | (1 << PlayParser.OCT_LITERAL) | (1 << PlayParser.BINARY_LITERAL) | (1 << PlayParser.FLOAT_LITERAL) | (1 << PlayParser.BOOL_LITERAL) | (1 << PlayParser.BYTE_LITERAL) | (1 << PlayParser.STRING_LITERAL) | (1 << PlayParser.NULL_LITERAL) | (1 << PlayParser.LPAREN) | (1 << PlayParser.LBRACE) | (1 << PlayParser.ADD) | (1 << PlayParser.SUB))) != 0) or ((((_la - 65)) & ~0x3f) == 0 and ((1 << (_la - 65)) & ((1 << (PlayParser.BANG - 65)) | (1 << (PlayParser.TILDE - 65)) | (1 << (PlayParser.IDENTIFIER - 65)))) != 0):
+            while (((_la) & ~0x3f) == 0 and ((1 << _la) & (
+                    (1 << PlayParser.THIS) | (1 << PlayParser.SUPER) | (1 << PlayParser.IF) | (1 << PlayParser.WHILE) | (1 << PlayParser.BREAK) | (1 << PlayParser.CONTINUE) | (
+                    1 << PlayParser.RETURN) | (1 << PlayParser.NEW) | (1 << PlayParser.DECIMAL_LITERAL) | (1 << PlayParser.HEX_LITERAL) | (1 << PlayParser.OCT_LITERAL) | (
+                            1 << PlayParser.BINARY_LITERAL) | (1 << PlayParser.FLOAT_LITERAL) | (1 << PlayParser.BOOL_LITERAL) | (1 << PlayParser.BYTE_LITERAL) | (1 << PlayParser.STRING_LITERAL) | (
+                            1 << PlayParser.NULL_LITERAL) | (1 << PlayParser.LPAREN) | (1 << PlayParser.LBRACE) | (1 << PlayParser.ADD) | (1 << PlayParser.SUB))) != 0) or (
+                    (((_la - 65)) & ~0x3f) == 0 and ((1 << (_la - 65)) & ((1 << (PlayParser.BANG - 65)) | (1 << (PlayParser.TILDE - 65)) | (1 << (PlayParser.IDENTIFIER - 65)))) != 0):
                 self.state = 182
                 self.statement()
                 self.state = 187
@@ -1276,50 +1202,38 @@ class PlayParser ( Parser ):
             self.exitRule()
         return localctx
 
-
     class StatementContext(ParserRuleContext):
 
-        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
         def ifStatement(self):
-            return self.getTypedRuleContext(PlayParser.IfStatementContext,0)
-
+            return self.getTypedRuleContext(PlayParser.IfStatementContext, 0)
 
         def whileStatement(self):
-            return self.getTypedRuleContext(PlayParser.WhileStatementContext,0)
-
+            return self.getTypedRuleContext(PlayParser.WhileStatementContext, 0)
 
         def breakStatement(self):
-            return self.getTypedRuleContext(PlayParser.BreakStatementContext,0)
-
+            return self.getTypedRuleContext(PlayParser.BreakStatementContext, 0)
 
         def continueStatement(self):
-            return self.getTypedRuleContext(PlayParser.ContinueStatementContext,0)
-
+            return self.getTypedRuleContext(PlayParser.ContinueStatementContext, 0)
 
         def returnStatement(self):
-            return self.getTypedRuleContext(PlayParser.ReturnStatementContext,0)
-
+            return self.getTypedRuleContext(PlayParser.ReturnStatementContext, 0)
 
         def assignStatement(self):
-            return self.getTypedRuleContext(PlayParser.AssignStatementContext,0)
-
+            return self.getTypedRuleContext(PlayParser.AssignStatementContext, 0)
 
         def expression(self):
-            return self.getTypedRuleContext(PlayParser.ExpressionContext,0)
-
+            return self.getTypedRuleContext(PlayParser.ExpressionContext, 0)
 
         def block(self):
-            return self.getTypedRuleContext(PlayParser.BlockContext,0)
-
+            return self.getTypedRuleContext(PlayParser.BlockContext, 0)
 
         def getRuleIndex(self):
             return PlayParser.RULE_statement
-
-
-
 
     def statement(self):
 
@@ -1328,7 +1242,7 @@ class PlayParser ( Parser ):
         try:
             self.state = 198
             self._errHandler.sync(self)
-            la_ = self._interp.adaptivePredict(self._input,16,self._ctx)
+            la_ = self._interp.adaptivePredict(self._input, 16, self._ctx)
             if la_ == 1:
                 self.enterOuterAlt(localctx, 1)
                 self.state = 190
@@ -1386,10 +1300,9 @@ class PlayParser ( Parser ):
             self.exitRule()
         return localctx
 
-
     class IfStatementContext(ParserRuleContext):
 
-        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -1397,35 +1310,28 @@ class PlayParser ( Parser ):
             return self.getToken(PlayParser.IF, 0)
 
         def expression(self):
-            return self.getTypedRuleContext(PlayParser.ExpressionContext,0)
-
+            return self.getTypedRuleContext(PlayParser.ExpressionContext, 0)
 
         def block(self):
-            return self.getTypedRuleContext(PlayParser.BlockContext,0)
+            return self.getTypedRuleContext(PlayParser.BlockContext, 0)
 
-
-        def elifClause(self, i:int=None):
+        def elifClause(self, i: int = None):
             if i is None:
                 return self.getTypedRuleContexts(PlayParser.ElifClauseContext)
             else:
-                return self.getTypedRuleContext(PlayParser.ElifClauseContext,i)
-
+                return self.getTypedRuleContext(PlayParser.ElifClauseContext, i)
 
         def elseClause(self):
-            return self.getTypedRuleContext(PlayParser.ElseClauseContext,0)
-
+            return self.getTypedRuleContext(PlayParser.ElseClauseContext, 0)
 
         def getRuleIndex(self):
             return PlayParser.RULE_ifStatement
-
-
-
 
     def ifStatement(self):
 
         localctx = PlayParser.IfStatementContext(self, self._ctx, self.state)
         self.enterRule(localctx, 30, self.RULE_ifStatement)
-        self._la = 0 # Token type
+        self._la = 0  # Token type
         try:
             self.enterOuterAlt(localctx, 1)
             self.state = 200
@@ -1437,7 +1343,7 @@ class PlayParser ( Parser ):
             self.state = 206
             self._errHandler.sync(self)
             _la = self._input.LA(1)
-            while _la==PlayParser.ELIF:
+            while _la == PlayParser.ELIF:
                 self.state = 203
                 self.elifClause()
                 self.state = 208
@@ -1447,7 +1353,7 @@ class PlayParser ( Parser ):
             self.state = 210
             self._errHandler.sync(self)
             _la = self._input.LA(1)
-            if _la==PlayParser.ELSE:
+            if _la == PlayParser.ELSE:
                 self.state = 209
                 self.elseClause()
 
@@ -1460,10 +1366,9 @@ class PlayParser ( Parser ):
             self.exitRule()
         return localctx
 
-
     class ElifClauseContext(ParserRuleContext):
 
-        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -1471,18 +1376,13 @@ class PlayParser ( Parser ):
             return self.getToken(PlayParser.ELIF, 0)
 
         def expression(self):
-            return self.getTypedRuleContext(PlayParser.ExpressionContext,0)
-
+            return self.getTypedRuleContext(PlayParser.ExpressionContext, 0)
 
         def block(self):
-            return self.getTypedRuleContext(PlayParser.BlockContext,0)
-
+            return self.getTypedRuleContext(PlayParser.BlockContext, 0)
 
         def getRuleIndex(self):
             return PlayParser.RULE_elifClause
-
-
-
 
     def elifClause(self):
 
@@ -1504,10 +1404,9 @@ class PlayParser ( Parser ):
             self.exitRule()
         return localctx
 
-
     class ElseClauseContext(ParserRuleContext):
 
-        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -1515,14 +1414,10 @@ class PlayParser ( Parser ):
             return self.getToken(PlayParser.ELSE, 0)
 
         def block(self):
-            return self.getTypedRuleContext(PlayParser.BlockContext,0)
-
+            return self.getTypedRuleContext(PlayParser.BlockContext, 0)
 
         def getRuleIndex(self):
             return PlayParser.RULE_elseClause
-
-
-
 
     def elseClause(self):
 
@@ -1542,10 +1437,9 @@ class PlayParser ( Parser ):
             self.exitRule()
         return localctx
 
-
     class WhileStatementContext(ParserRuleContext):
 
-        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -1553,18 +1447,13 @@ class PlayParser ( Parser ):
             return self.getToken(PlayParser.WHILE, 0)
 
         def expression(self):
-            return self.getTypedRuleContext(PlayParser.ExpressionContext,0)
-
+            return self.getTypedRuleContext(PlayParser.ExpressionContext, 0)
 
         def block(self):
-            return self.getTypedRuleContext(PlayParser.BlockContext,0)
-
+            return self.getTypedRuleContext(PlayParser.BlockContext, 0)
 
         def getRuleIndex(self):
             return PlayParser.RULE_whileStatement
-
-
-
 
     def whileStatement(self):
 
@@ -1586,10 +1475,9 @@ class PlayParser ( Parser ):
             self.exitRule()
         return localctx
 
-
     class ReturnStatementContext(ParserRuleContext):
 
-        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -1597,14 +1485,10 @@ class PlayParser ( Parser ):
             return self.getToken(PlayParser.RETURN, 0)
 
         def expression(self):
-            return self.getTypedRuleContext(PlayParser.ExpressionContext,0)
-
+            return self.getTypedRuleContext(PlayParser.ExpressionContext, 0)
 
         def getRuleIndex(self):
             return PlayParser.RULE_returnStatement
-
-
-
 
     def returnStatement(self):
 
@@ -1616,7 +1500,7 @@ class PlayParser ( Parser ):
             self.match(PlayParser.RETURN)
             self.state = 225
             self._errHandler.sync(self)
-            la_ = self._interp.adaptivePredict(self._input,19,self._ctx)
+            la_ = self._interp.adaptivePredict(self._input, 19, self._ctx)
             if la_ == 1:
                 self.state = 224
                 self.expression(0)
@@ -1630,10 +1514,9 @@ class PlayParser ( Parser ):
             self.exitRule()
         return localctx
 
-
     class BreakStatementContext(ParserRuleContext):
 
-        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -1642,9 +1525,6 @@ class PlayParser ( Parser ):
 
         def getRuleIndex(self):
             return PlayParser.RULE_breakStatement
-
-
-
 
     def breakStatement(self):
 
@@ -1662,10 +1542,9 @@ class PlayParser ( Parser ):
             self.exitRule()
         return localctx
 
-
     class ContinueStatementContext(ParserRuleContext):
 
-        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -1674,9 +1553,6 @@ class PlayParser ( Parser ):
 
         def getRuleIndex(self):
             return PlayParser.RULE_continueStatement
-
-
-
 
     def continueStatement(self):
 
@@ -1694,22 +1570,20 @@ class PlayParser ( Parser ):
             self.exitRule()
         return localctx
 
-
     class AssignStatementContext(ParserRuleContext):
 
-        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
         def ASSIGN(self):
             return self.getToken(PlayParser.ASSIGN, 0)
 
-        def expression(self, i:int=None):
+        def expression(self, i: int = None):
             if i is None:
                 return self.getTypedRuleContexts(PlayParser.ExpressionContext)
             else:
-                return self.getTypedRuleContext(PlayParser.ExpressionContext,i)
-
+                return self.getTypedRuleContext(PlayParser.ExpressionContext, i)
 
         def IDENTIFIER(self):
             return self.getToken(PlayParser.IDENTIFIER, 0)
@@ -1718,37 +1592,32 @@ class PlayParser ( Parser ):
             return self.getToken(PlayParser.COLON, 0)
 
         def typeName(self):
-            return self.getTypedRuleContext(PlayParser.TypeNameContext,0)
-
+            return self.getTypedRuleContext(PlayParser.TypeNameContext, 0)
 
         def getRuleIndex(self):
             return PlayParser.RULE_assignStatement
-
-
-
 
     def assignStatement(self):
 
         localctx = PlayParser.AssignStatementContext(self, self._ctx, self.state)
         self.enterRule(localctx, 44, self.RULE_assignStatement)
-        self._la = 0 # Token type
+        self._la = 0  # Token type
         try:
             self.enterOuterAlt(localctx, 1)
             self.state = 237
             self._errHandler.sync(self)
-            la_ = self._interp.adaptivePredict(self._input,21,self._ctx)
+            la_ = self._interp.adaptivePredict(self._input, 21, self._ctx)
             if la_ == 1:
                 self.state = 231
                 self.match(PlayParser.IDENTIFIER)
                 self.state = 234
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
-                if _la==PlayParser.COLON:
+                if _la == PlayParser.COLON:
                     self.state = 232
                     self.match(PlayParser.COLON)
                     self.state = 233
                     self.typeName()
-
 
                 pass
 
@@ -1756,7 +1625,6 @@ class PlayParser ( Parser ):
                 self.state = 236
                 self.expression(0)
                 pass
-
 
             self.state = 239
             self.match(PlayParser.ASSIGN)
@@ -1770,25 +1638,21 @@ class PlayParser ( Parser ):
             self.exitRule()
         return localctx
 
-
     class ExpressionContext(ParserRuleContext):
 
-        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
-            self.bop = None # Token
+            self.bop = None  # Token
 
         def logicalOrExpression(self):
-            return self.getTypedRuleContext(PlayParser.LogicalOrExpressionContext,0)
-
+            return self.getTypedRuleContext(PlayParser.LogicalOrExpressionContext, 0)
 
         def expression(self):
-            return self.getTypedRuleContext(PlayParser.ExpressionContext,0)
-
+            return self.getTypedRuleContext(PlayParser.ExpressionContext, 0)
 
         def methodCall(self):
-            return self.getTypedRuleContext(PlayParser.MethodCallContext,0)
-
+            return self.getTypedRuleContext(PlayParser.MethodCallContext, 0)
 
         def DOT(self):
             return self.getToken(PlayParser.DOT, 0)
@@ -1799,9 +1663,7 @@ class PlayParser ( Parser ):
         def getRuleIndex(self):
             return PlayParser.RULE_expression
 
-
-
-    def expression(self, _p:int=0):
+    def expression(self, _p: int = 0):
         _parentctx = self._ctx
         _parentState = self.state
         localctx = PlayParser.ExpressionContext(self, self._ctx, _parentState)
@@ -1815,15 +1677,15 @@ class PlayParser ( Parser ):
             self._ctx.stop = self._input.LT(-1)
             self.state = 253
             self._errHandler.sync(self)
-            _alt = self._interp.adaptivePredict(self._input,23,self._ctx)
-            while _alt!=2 and _alt!=ATN.INVALID_ALT_NUMBER:
-                if _alt==1:
+            _alt = self._interp.adaptivePredict(self._input, 23, self._ctx)
+            while _alt != 2 and _alt != ATN.INVALID_ALT_NUMBER:
+                if _alt == 1:
                     if self._parseListeners is not None:
                         self.triggerExitRuleEvent()
                     _prevctx = localctx
                     self.state = 251
                     self._errHandler.sync(self)
-                    la_ = self._interp.adaptivePredict(self._input,22,self._ctx)
+                    la_ = self._interp.adaptivePredict(self._input, 22, self._ctx)
                     if la_ == 1:
                         localctx = PlayParser.ExpressionContext(self, _parentctx, _parentState)
                         self.pushNewRecursionContext(localctx, _startState, self.RULE_expression)
@@ -1850,10 +1712,9 @@ class PlayParser ( Parser ):
                         self.match(PlayParser.IDENTIFIER)
                         pass
 
-             
                 self.state = 255
                 self._errHandler.sync(self)
-                _alt = self._interp.adaptivePredict(self._input,23,self._ctx)
+                _alt = self._interp.adaptivePredict(self._input, 23, self._ctx)
 
         except RecognitionException as re:
             localctx.exception = re
@@ -1863,21 +1724,18 @@ class PlayParser ( Parser ):
             self.unrollRecursionContexts(_parentctx)
         return localctx
 
-
     class LogicalOrExpressionContext(ParserRuleContext):
 
-        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
-            self.bop = None # Token
+            self.bop = None  # Token
 
         def logicalAndExpression(self):
-            return self.getTypedRuleContext(PlayParser.LogicalAndExpressionContext,0)
-
+            return self.getTypedRuleContext(PlayParser.LogicalAndExpressionContext, 0)
 
         def logicalOrExpression(self):
-            return self.getTypedRuleContext(PlayParser.LogicalOrExpressionContext,0)
-
+            return self.getTypedRuleContext(PlayParser.LogicalOrExpressionContext, 0)
 
         def OR(self):
             return self.getToken(PlayParser.OR, 0)
@@ -1885,9 +1743,7 @@ class PlayParser ( Parser ):
         def getRuleIndex(self):
             return PlayParser.RULE_logicalOrExpression
 
-
-
-    def logicalOrExpression(self, _p:int=0):
+    def logicalOrExpression(self, _p: int = 0):
         _parentctx = self._ctx
         _parentState = self.state
         localctx = PlayParser.LogicalOrExpressionContext(self, self._ctx, _parentState)
@@ -1901,9 +1757,9 @@ class PlayParser ( Parser ):
             self._ctx.stop = self._input.LT(-1)
             self.state = 264
             self._errHandler.sync(self)
-            _alt = self._interp.adaptivePredict(self._input,24,self._ctx)
-            while _alt!=2 and _alt!=ATN.INVALID_ALT_NUMBER:
-                if _alt==1:
+            _alt = self._interp.adaptivePredict(self._input, 24, self._ctx)
+            while _alt != 2 and _alt != ATN.INVALID_ALT_NUMBER:
+                if _alt == 1:
                     if self._parseListeners is not None:
                         self.triggerExitRuleEvent()
                     _prevctx = localctx
@@ -1916,10 +1772,10 @@ class PlayParser ( Parser ):
                     self.state = 260
                     localctx.bop = self.match(PlayParser.OR)
                     self.state = 261
-                    self.logicalAndExpression(0) 
+                    self.logicalAndExpression(0)
                 self.state = 266
                 self._errHandler.sync(self)
-                _alt = self._interp.adaptivePredict(self._input,24,self._ctx)
+                _alt = self._interp.adaptivePredict(self._input, 24, self._ctx)
 
         except RecognitionException as re:
             localctx.exception = re
@@ -1929,21 +1785,18 @@ class PlayParser ( Parser ):
             self.unrollRecursionContexts(_parentctx)
         return localctx
 
-
     class LogicalAndExpressionContext(ParserRuleContext):
 
-        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
-            self.bop = None # Token
+            self.bop = None  # Token
 
         def inclusiveOrExpression(self):
-            return self.getTypedRuleContext(PlayParser.InclusiveOrExpressionContext,0)
-
+            return self.getTypedRuleContext(PlayParser.InclusiveOrExpressionContext, 0)
 
         def logicalAndExpression(self):
-            return self.getTypedRuleContext(PlayParser.LogicalAndExpressionContext,0)
-
+            return self.getTypedRuleContext(PlayParser.LogicalAndExpressionContext, 0)
 
         def AND(self):
             return self.getToken(PlayParser.AND, 0)
@@ -1951,9 +1804,7 @@ class PlayParser ( Parser ):
         def getRuleIndex(self):
             return PlayParser.RULE_logicalAndExpression
 
-
-
-    def logicalAndExpression(self, _p:int=0):
+    def logicalAndExpression(self, _p: int = 0):
         _parentctx = self._ctx
         _parentState = self.state
         localctx = PlayParser.LogicalAndExpressionContext(self, self._ctx, _parentState)
@@ -1967,9 +1818,9 @@ class PlayParser ( Parser ):
             self._ctx.stop = self._input.LT(-1)
             self.state = 275
             self._errHandler.sync(self)
-            _alt = self._interp.adaptivePredict(self._input,25,self._ctx)
-            while _alt!=2 and _alt!=ATN.INVALID_ALT_NUMBER:
-                if _alt==1:
+            _alt = self._interp.adaptivePredict(self._input, 25, self._ctx)
+            while _alt != 2 and _alt != ATN.INVALID_ALT_NUMBER:
+                if _alt == 1:
                     if self._parseListeners is not None:
                         self.triggerExitRuleEvent()
                     _prevctx = localctx
@@ -1982,10 +1833,10 @@ class PlayParser ( Parser ):
                     self.state = 271
                     localctx.bop = self.match(PlayParser.AND)
                     self.state = 272
-                    self.inclusiveOrExpression(0) 
+                    self.inclusiveOrExpression(0)
                 self.state = 277
                 self._errHandler.sync(self)
-                _alt = self._interp.adaptivePredict(self._input,25,self._ctx)
+                _alt = self._interp.adaptivePredict(self._input, 25, self._ctx)
 
         except RecognitionException as re:
             localctx.exception = re
@@ -1995,21 +1846,18 @@ class PlayParser ( Parser ):
             self.unrollRecursionContexts(_parentctx)
         return localctx
 
-
     class InclusiveOrExpressionContext(ParserRuleContext):
 
-        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
-            self.bop = None # Token
+            self.bop = None  # Token
 
         def exclusiveOrExpression(self):
-            return self.getTypedRuleContext(PlayParser.ExclusiveOrExpressionContext,0)
-
+            return self.getTypedRuleContext(PlayParser.ExclusiveOrExpressionContext, 0)
 
         def inclusiveOrExpression(self):
-            return self.getTypedRuleContext(PlayParser.InclusiveOrExpressionContext,0)
-
+            return self.getTypedRuleContext(PlayParser.InclusiveOrExpressionContext, 0)
 
         def BITOR(self):
             return self.getToken(PlayParser.BITOR, 0)
@@ -2017,9 +1865,7 @@ class PlayParser ( Parser ):
         def getRuleIndex(self):
             return PlayParser.RULE_inclusiveOrExpression
 
-
-
-    def inclusiveOrExpression(self, _p:int=0):
+    def inclusiveOrExpression(self, _p: int = 0):
         _parentctx = self._ctx
         _parentState = self.state
         localctx = PlayParser.InclusiveOrExpressionContext(self, self._ctx, _parentState)
@@ -2033,9 +1879,9 @@ class PlayParser ( Parser ):
             self._ctx.stop = self._input.LT(-1)
             self.state = 286
             self._errHandler.sync(self)
-            _alt = self._interp.adaptivePredict(self._input,26,self._ctx)
-            while _alt!=2 and _alt!=ATN.INVALID_ALT_NUMBER:
-                if _alt==1:
+            _alt = self._interp.adaptivePredict(self._input, 26, self._ctx)
+            while _alt != 2 and _alt != ATN.INVALID_ALT_NUMBER:
+                if _alt == 1:
                     if self._parseListeners is not None:
                         self.triggerExitRuleEvent()
                     _prevctx = localctx
@@ -2048,10 +1894,10 @@ class PlayParser ( Parser ):
                     self.state = 282
                     localctx.bop = self.match(PlayParser.BITOR)
                     self.state = 283
-                    self.exclusiveOrExpression(0) 
+                    self.exclusiveOrExpression(0)
                 self.state = 288
                 self._errHandler.sync(self)
-                _alt = self._interp.adaptivePredict(self._input,26,self._ctx)
+                _alt = self._interp.adaptivePredict(self._input, 26, self._ctx)
 
         except RecognitionException as re:
             localctx.exception = re
@@ -2061,21 +1907,18 @@ class PlayParser ( Parser ):
             self.unrollRecursionContexts(_parentctx)
         return localctx
 
-
     class ExclusiveOrExpressionContext(ParserRuleContext):
 
-        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
-            self.bop = None # Token
+            self.bop = None  # Token
 
         def andExpression(self):
-            return self.getTypedRuleContext(PlayParser.AndExpressionContext,0)
-
+            return self.getTypedRuleContext(PlayParser.AndExpressionContext, 0)
 
         def exclusiveOrExpression(self):
-            return self.getTypedRuleContext(PlayParser.ExclusiveOrExpressionContext,0)
-
+            return self.getTypedRuleContext(PlayParser.ExclusiveOrExpressionContext, 0)
 
         def CARET(self):
             return self.getToken(PlayParser.CARET, 0)
@@ -2083,9 +1926,7 @@ class PlayParser ( Parser ):
         def getRuleIndex(self):
             return PlayParser.RULE_exclusiveOrExpression
 
-
-
-    def exclusiveOrExpression(self, _p:int=0):
+    def exclusiveOrExpression(self, _p: int = 0):
         _parentctx = self._ctx
         _parentState = self.state
         localctx = PlayParser.ExclusiveOrExpressionContext(self, self._ctx, _parentState)
@@ -2099,9 +1940,9 @@ class PlayParser ( Parser ):
             self._ctx.stop = self._input.LT(-1)
             self.state = 297
             self._errHandler.sync(self)
-            _alt = self._interp.adaptivePredict(self._input,27,self._ctx)
-            while _alt!=2 and _alt!=ATN.INVALID_ALT_NUMBER:
-                if _alt==1:
+            _alt = self._interp.adaptivePredict(self._input, 27, self._ctx)
+            while _alt != 2 and _alt != ATN.INVALID_ALT_NUMBER:
+                if _alt == 1:
                     if self._parseListeners is not None:
                         self.triggerExitRuleEvent()
                     _prevctx = localctx
@@ -2114,10 +1955,10 @@ class PlayParser ( Parser ):
                     self.state = 293
                     localctx.bop = self.match(PlayParser.CARET)
                     self.state = 294
-                    self.andExpression(0) 
+                    self.andExpression(0)
                 self.state = 299
                 self._errHandler.sync(self)
-                _alt = self._interp.adaptivePredict(self._input,27,self._ctx)
+                _alt = self._interp.adaptivePredict(self._input, 27, self._ctx)
 
         except RecognitionException as re:
             localctx.exception = re
@@ -2127,21 +1968,18 @@ class PlayParser ( Parser ):
             self.unrollRecursionContexts(_parentctx)
         return localctx
 
-
     class AndExpressionContext(ParserRuleContext):
 
-        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
-            self.bop = None # Token
+            self.bop = None  # Token
 
         def equalityExpression(self):
-            return self.getTypedRuleContext(PlayParser.EqualityExpressionContext,0)
-
+            return self.getTypedRuleContext(PlayParser.EqualityExpressionContext, 0)
 
         def andExpression(self):
-            return self.getTypedRuleContext(PlayParser.AndExpressionContext,0)
-
+            return self.getTypedRuleContext(PlayParser.AndExpressionContext, 0)
 
         def BITAND(self):
             return self.getToken(PlayParser.BITAND, 0)
@@ -2149,9 +1987,7 @@ class PlayParser ( Parser ):
         def getRuleIndex(self):
             return PlayParser.RULE_andExpression
 
-
-
-    def andExpression(self, _p:int=0):
+    def andExpression(self, _p: int = 0):
         _parentctx = self._ctx
         _parentState = self.state
         localctx = PlayParser.AndExpressionContext(self, self._ctx, _parentState)
@@ -2165,9 +2001,9 @@ class PlayParser ( Parser ):
             self._ctx.stop = self._input.LT(-1)
             self.state = 308
             self._errHandler.sync(self)
-            _alt = self._interp.adaptivePredict(self._input,28,self._ctx)
-            while _alt!=2 and _alt!=ATN.INVALID_ALT_NUMBER:
-                if _alt==1:
+            _alt = self._interp.adaptivePredict(self._input, 28, self._ctx)
+            while _alt != 2 and _alt != ATN.INVALID_ALT_NUMBER:
+                if _alt == 1:
                     if self._parseListeners is not None:
                         self.triggerExitRuleEvent()
                     _prevctx = localctx
@@ -2180,10 +2016,10 @@ class PlayParser ( Parser ):
                     self.state = 304
                     localctx.bop = self.match(PlayParser.BITAND)
                     self.state = 305
-                    self.equalityExpression(0) 
+                    self.equalityExpression(0)
                 self.state = 310
                 self._errHandler.sync(self)
-                _alt = self._interp.adaptivePredict(self._input,28,self._ctx)
+                _alt = self._interp.adaptivePredict(self._input, 28, self._ctx)
 
         except RecognitionException as re:
             localctx.exception = re
@@ -2193,21 +2029,18 @@ class PlayParser ( Parser ):
             self.unrollRecursionContexts(_parentctx)
         return localctx
 
-
     class EqualityExpressionContext(ParserRuleContext):
 
-        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
-            self.bop = None # Token
+            self.bop = None  # Token
 
         def relationalExpression(self):
-            return self.getTypedRuleContext(PlayParser.RelationalExpressionContext,0)
-
+            return self.getTypedRuleContext(PlayParser.RelationalExpressionContext, 0)
 
         def equalityExpression(self):
-            return self.getTypedRuleContext(PlayParser.EqualityExpressionContext,0)
-
+            return self.getTypedRuleContext(PlayParser.EqualityExpressionContext, 0)
 
         def EQUAL(self):
             return self.getToken(PlayParser.EQUAL, 0)
@@ -2218,9 +2051,7 @@ class PlayParser ( Parser ):
         def getRuleIndex(self):
             return PlayParser.RULE_equalityExpression
 
-
-
-    def equalityExpression(self, _p:int=0):
+    def equalityExpression(self, _p: int = 0):
         _parentctx = self._ctx
         _parentState = self.state
         localctx = PlayParser.EqualityExpressionContext(self, self._ctx, _parentState)
@@ -2234,15 +2065,15 @@ class PlayParser ( Parser ):
             self._ctx.stop = self._input.LT(-1)
             self.state = 322
             self._errHandler.sync(self)
-            _alt = self._interp.adaptivePredict(self._input,30,self._ctx)
-            while _alt!=2 and _alt!=ATN.INVALID_ALT_NUMBER:
-                if _alt==1:
+            _alt = self._interp.adaptivePredict(self._input, 30, self._ctx)
+            while _alt != 2 and _alt != ATN.INVALID_ALT_NUMBER:
+                if _alt == 1:
                     if self._parseListeners is not None:
                         self.triggerExitRuleEvent()
                     _prevctx = localctx
                     self.state = 320
                     self._errHandler.sync(self)
-                    la_ = self._interp.adaptivePredict(self._input,29,self._ctx)
+                    la_ = self._interp.adaptivePredict(self._input, 29, self._ctx)
                     if la_ == 1:
                         localctx = PlayParser.EqualityExpressionContext(self, _parentctx, _parentState)
                         self.pushNewRecursionContext(localctx, _startState, self.RULE_equalityExpression)
@@ -2269,10 +2100,9 @@ class PlayParser ( Parser ):
                         self.relationalExpression(0)
                         pass
 
-             
                 self.state = 324
                 self._errHandler.sync(self)
-                _alt = self._interp.adaptivePredict(self._input,30,self._ctx)
+                _alt = self._interp.adaptivePredict(self._input, 30, self._ctx)
 
         except RecognitionException as re:
             localctx.exception = re
@@ -2282,21 +2112,18 @@ class PlayParser ( Parser ):
             self.unrollRecursionContexts(_parentctx)
         return localctx
 
-
     class RelationalExpressionContext(ParserRuleContext):
 
-        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
-            self.bop = None # Token
+            self.bop = None  # Token
 
         def shiftExpression(self):
-            return self.getTypedRuleContext(PlayParser.ShiftExpressionContext,0)
-
+            return self.getTypedRuleContext(PlayParser.ShiftExpressionContext, 0)
 
         def relationalExpression(self):
-            return self.getTypedRuleContext(PlayParser.RelationalExpressionContext,0)
-
+            return self.getTypedRuleContext(PlayParser.RelationalExpressionContext, 0)
 
         def LT(self):
             return self.getToken(PlayParser.LT, 0)
@@ -2313,9 +2140,7 @@ class PlayParser ( Parser ):
         def getRuleIndex(self):
             return PlayParser.RULE_relationalExpression
 
-
-
-    def relationalExpression(self, _p:int=0):
+    def relationalExpression(self, _p: int = 0):
         _parentctx = self._ctx
         _parentState = self.state
         localctx = PlayParser.RelationalExpressionContext(self, self._ctx, _parentState)
@@ -2329,15 +2154,15 @@ class PlayParser ( Parser ):
             self._ctx.stop = self._input.LT(-1)
             self.state = 342
             self._errHandler.sync(self)
-            _alt = self._interp.adaptivePredict(self._input,32,self._ctx)
-            while _alt!=2 and _alt!=ATN.INVALID_ALT_NUMBER:
-                if _alt==1:
+            _alt = self._interp.adaptivePredict(self._input, 32, self._ctx)
+            while _alt != 2 and _alt != ATN.INVALID_ALT_NUMBER:
+                if _alt == 1:
                     if self._parseListeners is not None:
                         self.triggerExitRuleEvent()
                     _prevctx = localctx
                     self.state = 340
                     self._errHandler.sync(self)
-                    la_ = self._interp.adaptivePredict(self._input,31,self._ctx)
+                    la_ = self._interp.adaptivePredict(self._input, 31, self._ctx)
                     if la_ == 1:
                         localctx = PlayParser.RelationalExpressionContext(self, _parentctx, _parentState)
                         self.pushNewRecursionContext(localctx, _startState, self.RULE_relationalExpression)
@@ -2390,10 +2215,9 @@ class PlayParser ( Parser ):
                         self.shiftExpression(0)
                         pass
 
-             
                 self.state = 344
                 self._errHandler.sync(self)
-                _alt = self._interp.adaptivePredict(self._input,32,self._ctx)
+                _alt = self._interp.adaptivePredict(self._input, 32, self._ctx)
 
         except RecognitionException as re:
             localctx.exception = re
@@ -2403,21 +2227,18 @@ class PlayParser ( Parser ):
             self.unrollRecursionContexts(_parentctx)
         return localctx
 
-
     class ShiftExpressionContext(ParserRuleContext):
 
-        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
-            self.bop = None # Token
+            self.bop = None  # Token
 
         def additiveExpression(self):
-            return self.getTypedRuleContext(PlayParser.AdditiveExpressionContext,0)
-
+            return self.getTypedRuleContext(PlayParser.AdditiveExpressionContext, 0)
 
         def shiftExpression(self):
-            return self.getTypedRuleContext(PlayParser.ShiftExpressionContext,0)
-
+            return self.getTypedRuleContext(PlayParser.ShiftExpressionContext, 0)
 
         def LSHIFT(self):
             return self.getToken(PlayParser.LSHIFT, 0)
@@ -2431,9 +2252,7 @@ class PlayParser ( Parser ):
         def getRuleIndex(self):
             return PlayParser.RULE_shiftExpression
 
-
-
-    def shiftExpression(self, _p:int=0):
+    def shiftExpression(self, _p: int = 0):
         _parentctx = self._ctx
         _parentState = self.state
         localctx = PlayParser.ShiftExpressionContext(self, self._ctx, _parentState)
@@ -2447,15 +2266,15 @@ class PlayParser ( Parser ):
             self._ctx.stop = self._input.LT(-1)
             self.state = 359
             self._errHandler.sync(self)
-            _alt = self._interp.adaptivePredict(self._input,34,self._ctx)
-            while _alt!=2 and _alt!=ATN.INVALID_ALT_NUMBER:
-                if _alt==1:
+            _alt = self._interp.adaptivePredict(self._input, 34, self._ctx)
+            while _alt != 2 and _alt != ATN.INVALID_ALT_NUMBER:
+                if _alt == 1:
                     if self._parseListeners is not None:
                         self.triggerExitRuleEvent()
                     _prevctx = localctx
                     self.state = 357
                     self._errHandler.sync(self)
-                    la_ = self._interp.adaptivePredict(self._input,33,self._ctx)
+                    la_ = self._interp.adaptivePredict(self._input, 33, self._ctx)
                     if la_ == 1:
                         localctx = PlayParser.ShiftExpressionContext(self, _parentctx, _parentState)
                         self.pushNewRecursionContext(localctx, _startState, self.RULE_shiftExpression)
@@ -2495,10 +2314,9 @@ class PlayParser ( Parser ):
                         self.additiveExpression(0)
                         pass
 
-             
                 self.state = 361
                 self._errHandler.sync(self)
-                _alt = self._interp.adaptivePredict(self._input,34,self._ctx)
+                _alt = self._interp.adaptivePredict(self._input, 34, self._ctx)
 
         except RecognitionException as re:
             localctx.exception = re
@@ -2508,21 +2326,18 @@ class PlayParser ( Parser ):
             self.unrollRecursionContexts(_parentctx)
         return localctx
 
-
     class AdditiveExpressionContext(ParserRuleContext):
 
-        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
-            self.bop = None # Token
+            self.bop = None  # Token
 
         def multiplicativeExpression(self):
-            return self.getTypedRuleContext(PlayParser.MultiplicativeExpressionContext,0)
-
+            return self.getTypedRuleContext(PlayParser.MultiplicativeExpressionContext, 0)
 
         def additiveExpression(self):
-            return self.getTypedRuleContext(PlayParser.AdditiveExpressionContext,0)
-
+            return self.getTypedRuleContext(PlayParser.AdditiveExpressionContext, 0)
 
         def ADD(self):
             return self.getToken(PlayParser.ADD, 0)
@@ -2533,9 +2348,7 @@ class PlayParser ( Parser ):
         def getRuleIndex(self):
             return PlayParser.RULE_additiveExpression
 
-
-
-    def additiveExpression(self, _p:int=0):
+    def additiveExpression(self, _p: int = 0):
         _parentctx = self._ctx
         _parentState = self.state
         localctx = PlayParser.AdditiveExpressionContext(self, self._ctx, _parentState)
@@ -2549,15 +2362,15 @@ class PlayParser ( Parser ):
             self._ctx.stop = self._input.LT(-1)
             self.state = 373
             self._errHandler.sync(self)
-            _alt = self._interp.adaptivePredict(self._input,36,self._ctx)
-            while _alt!=2 and _alt!=ATN.INVALID_ALT_NUMBER:
-                if _alt==1:
+            _alt = self._interp.adaptivePredict(self._input, 36, self._ctx)
+            while _alt != 2 and _alt != ATN.INVALID_ALT_NUMBER:
+                if _alt == 1:
                     if self._parseListeners is not None:
                         self.triggerExitRuleEvent()
                     _prevctx = localctx
                     self.state = 371
                     self._errHandler.sync(self)
-                    la_ = self._interp.adaptivePredict(self._input,35,self._ctx)
+                    la_ = self._interp.adaptivePredict(self._input, 35, self._ctx)
                     if la_ == 1:
                         localctx = PlayParser.AdditiveExpressionContext(self, _parentctx, _parentState)
                         self.pushNewRecursionContext(localctx, _startState, self.RULE_additiveExpression)
@@ -2584,10 +2397,9 @@ class PlayParser ( Parser ):
                         self.multiplicativeExpression(0)
                         pass
 
-             
                 self.state = 375
                 self._errHandler.sync(self)
-                _alt = self._interp.adaptivePredict(self._input,36,self._ctx)
+                _alt = self._interp.adaptivePredict(self._input, 36, self._ctx)
 
         except RecognitionException as re:
             localctx.exception = re
@@ -2597,21 +2409,18 @@ class PlayParser ( Parser ):
             self.unrollRecursionContexts(_parentctx)
         return localctx
 
-
     class MultiplicativeExpressionContext(ParserRuleContext):
 
-        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
-            self.bop = None # Token
+            self.bop = None  # Token
 
         def castExpression(self):
-            return self.getTypedRuleContext(PlayParser.CastExpressionContext,0)
-
+            return self.getTypedRuleContext(PlayParser.CastExpressionContext, 0)
 
         def multiplicativeExpression(self):
-            return self.getTypedRuleContext(PlayParser.MultiplicativeExpressionContext,0)
-
+            return self.getTypedRuleContext(PlayParser.MultiplicativeExpressionContext, 0)
 
         def MUL(self):
             return self.getToken(PlayParser.MUL, 0)
@@ -2625,9 +2434,7 @@ class PlayParser ( Parser ):
         def getRuleIndex(self):
             return PlayParser.RULE_multiplicativeExpression
 
-
-
-    def multiplicativeExpression(self, _p:int=0):
+    def multiplicativeExpression(self, _p: int = 0):
         _parentctx = self._ctx
         _parentState = self.state
         localctx = PlayParser.MultiplicativeExpressionContext(self, self._ctx, _parentState)
@@ -2641,15 +2448,15 @@ class PlayParser ( Parser ):
             self._ctx.stop = self._input.LT(-1)
             self.state = 390
             self._errHandler.sync(self)
-            _alt = self._interp.adaptivePredict(self._input,38,self._ctx)
-            while _alt!=2 and _alt!=ATN.INVALID_ALT_NUMBER:
-                if _alt==1:
+            _alt = self._interp.adaptivePredict(self._input, 38, self._ctx)
+            while _alt != 2 and _alt != ATN.INVALID_ALT_NUMBER:
+                if _alt == 1:
                     if self._parseListeners is not None:
                         self.triggerExitRuleEvent()
                     _prevctx = localctx
                     self.state = 388
                     self._errHandler.sync(self)
-                    la_ = self._interp.adaptivePredict(self._input,37,self._ctx)
+                    la_ = self._interp.adaptivePredict(self._input, 37, self._ctx)
                     if la_ == 1:
                         localctx = PlayParser.MultiplicativeExpressionContext(self, _parentctx, _parentState)
                         self.pushNewRecursionContext(localctx, _startState, self.RULE_multiplicativeExpression)
@@ -2689,10 +2496,9 @@ class PlayParser ( Parser ):
                         self.castExpression(0)
                         pass
 
-             
                 self.state = 392
                 self._errHandler.sync(self)
-                _alt = self._interp.adaptivePredict(self._input,38,self._ctx)
+                _alt = self._interp.adaptivePredict(self._input, 38, self._ctx)
 
         except RecognitionException as re:
             localctx.exception = re
@@ -2702,25 +2508,21 @@ class PlayParser ( Parser ):
             self.unrollRecursionContexts(_parentctx)
         return localctx
 
-
     class CastExpressionContext(ParserRuleContext):
 
-        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
-            self.bop = None # Token
+            self.bop = None  # Token
 
         def unaryExpression(self):
-            return self.getTypedRuleContext(PlayParser.UnaryExpressionContext,0)
-
+            return self.getTypedRuleContext(PlayParser.UnaryExpressionContext, 0)
 
         def castExpression(self):
-            return self.getTypedRuleContext(PlayParser.CastExpressionContext,0)
-
+            return self.getTypedRuleContext(PlayParser.CastExpressionContext, 0)
 
         def typeName(self):
-            return self.getTypedRuleContext(PlayParser.TypeNameContext,0)
-
+            return self.getTypedRuleContext(PlayParser.TypeNameContext, 0)
 
         def AS(self):
             return self.getToken(PlayParser.AS, 0)
@@ -2728,9 +2530,7 @@ class PlayParser ( Parser ):
         def getRuleIndex(self):
             return PlayParser.RULE_castExpression
 
-
-
-    def castExpression(self, _p:int=0):
+    def castExpression(self, _p: int = 0):
         _parentctx = self._ctx
         _parentState = self.state
         localctx = PlayParser.CastExpressionContext(self, self._ctx, _parentState)
@@ -2744,9 +2544,9 @@ class PlayParser ( Parser ):
             self._ctx.stop = self._input.LT(-1)
             self.state = 401
             self._errHandler.sync(self)
-            _alt = self._interp.adaptivePredict(self._input,39,self._ctx)
-            while _alt!=2 and _alt!=ATN.INVALID_ALT_NUMBER:
-                if _alt==1:
+            _alt = self._interp.adaptivePredict(self._input, 39, self._ctx)
+            while _alt != 2 and _alt != ATN.INVALID_ALT_NUMBER:
+                if _alt == 1:
                     if self._parseListeners is not None:
                         self.triggerExitRuleEvent()
                     _prevctx = localctx
@@ -2759,10 +2559,10 @@ class PlayParser ( Parser ):
                     self.state = 397
                     localctx.bop = self.match(PlayParser.AS)
                     self.state = 398
-                    self.typeName() 
+                    self.typeName()
                 self.state = 403
                 self._errHandler.sync(self)
-                _alt = self._interp.adaptivePredict(self._input,39,self._ctx)
+                _alt = self._interp.adaptivePredict(self._input, 39, self._ctx)
 
         except RecognitionException as re:
             localctx.exception = re
@@ -2772,17 +2572,15 @@ class PlayParser ( Parser ):
             self.unrollRecursionContexts(_parentctx)
         return localctx
 
-
     class UnaryExpressionContext(ParserRuleContext):
 
-        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
-            self.uop = None # Token
+            self.uop = None  # Token
 
         def castExpression(self):
-            return self.getTypedRuleContext(PlayParser.CastExpressionContext,0)
-
+            return self.getTypedRuleContext(PlayParser.CastExpressionContext, 0)
 
         def ADD(self):
             return self.getToken(PlayParser.ADD, 0)
@@ -2797,20 +2595,16 @@ class PlayParser ( Parser ):
             return self.getToken(PlayParser.BANG, 0)
 
         def primaryExpression(self):
-            return self.getTypedRuleContext(PlayParser.PrimaryExpressionContext,0)
-
+            return self.getTypedRuleContext(PlayParser.PrimaryExpressionContext, 0)
 
         def getRuleIndex(self):
             return PlayParser.RULE_unaryExpression
-
-
-
 
     def unaryExpression(self):
 
         localctx = PlayParser.UnaryExpressionContext(self, self._ctx, self.state)
         self.enterRule(localctx, 70, self.RULE_unaryExpression)
-        self._la = 0 # Token type
+        self._la = 0  # Token type
         try:
             self.state = 407
             self._errHandler.sync(self)
@@ -2820,7 +2614,8 @@ class PlayParser ( Parser ):
                 self.state = 404
                 localctx.uop = self._input.LT(1)
                 _la = self._input.LA(1)
-                if not(((((_la - 52)) & ~0x3f) == 0 and ((1 << (_la - 52)) & ((1 << (PlayParser.ADD - 52)) | (1 << (PlayParser.SUB - 52)) | (1 << (PlayParser.BANG - 52)) | (1 << (PlayParser.TILDE - 52)))) != 0)):
+                if not (((((_la - 52)) & ~0x3f) == 0 and (
+                        (1 << (_la - 52)) & ((1 << (PlayParser.ADD - 52)) | (1 << (PlayParser.SUB - 52)) | (1 << (PlayParser.BANG - 52)) | (1 << (PlayParser.TILDE - 52)))) != 0)):
                     localctx.uop = self._errHandler.recoverInline(self)
                 else:
                     self._errHandler.reportMatch(self)
@@ -2828,7 +2623,8 @@ class PlayParser ( Parser ):
                 self.state = 405
                 self.castExpression(0)
                 pass
-            elif token in [PlayParser.THIS, PlayParser.SUPER, PlayParser.NEW, PlayParser.DECIMAL_LITERAL, PlayParser.HEX_LITERAL, PlayParser.OCT_LITERAL, PlayParser.BINARY_LITERAL, PlayParser.FLOAT_LITERAL, PlayParser.BOOL_LITERAL, PlayParser.BYTE_LITERAL, PlayParser.STRING_LITERAL, PlayParser.NULL_LITERAL, PlayParser.LPAREN, PlayParser.IDENTIFIER]:
+            elif token in [PlayParser.THIS, PlayParser.SUPER, PlayParser.NEW, PlayParser.DECIMAL_LITERAL, PlayParser.HEX_LITERAL, PlayParser.OCT_LITERAL, PlayParser.BINARY_LITERAL,
+                           PlayParser.FLOAT_LITERAL, PlayParser.BOOL_LITERAL, PlayParser.BYTE_LITERAL, PlayParser.STRING_LITERAL, PlayParser.NULL_LITERAL, PlayParser.LPAREN, PlayParser.IDENTIFIER]:
                 self.enterOuterAlt(localctx, 2)
                 self.state = 406
                 self.primaryExpression()
@@ -2844,20 +2640,17 @@ class PlayParser ( Parser ):
             self.exitRule()
         return localctx
 
-
     class PrimaryExpressionContext(ParserRuleContext):
 
-        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
         def methodCall(self):
-            return self.getTypedRuleContext(PlayParser.MethodCallContext,0)
-
+            return self.getTypedRuleContext(PlayParser.MethodCallContext, 0)
 
         def classCreation(self):
-            return self.getTypedRuleContext(PlayParser.ClassCreationContext,0)
-
+            return self.getTypedRuleContext(PlayParser.ClassCreationContext, 0)
 
         def THIS(self):
             return self.getToken(PlayParser.THIS, 0)
@@ -2866,8 +2659,7 @@ class PlayParser ( Parser ):
             return self.getToken(PlayParser.SUPER, 0)
 
         def literal(self):
-            return self.getTypedRuleContext(PlayParser.LiteralContext,0)
-
+            return self.getTypedRuleContext(PlayParser.LiteralContext, 0)
 
         def IDENTIFIER(self):
             return self.getToken(PlayParser.IDENTIFIER, 0)
@@ -2876,17 +2668,13 @@ class PlayParser ( Parser ):
             return self.getToken(PlayParser.LPAREN, 0)
 
         def expression(self):
-            return self.getTypedRuleContext(PlayParser.ExpressionContext,0)
-
+            return self.getTypedRuleContext(PlayParser.ExpressionContext, 0)
 
         def RPAREN(self):
             return self.getToken(PlayParser.RPAREN, 0)
 
         def getRuleIndex(self):
             return PlayParser.RULE_primaryExpression
-
-
-
 
     def primaryExpression(self):
 
@@ -2895,7 +2683,7 @@ class PlayParser ( Parser ):
         try:
             self.state = 419
             self._errHandler.sync(self)
-            la_ = self._interp.adaptivePredict(self._input,41,self._ctx)
+            la_ = self._interp.adaptivePredict(self._input, 41, self._ctx)
             if la_ == 1:
                 self.enterOuterAlt(localctx, 1)
                 self.state = 409
@@ -2951,10 +2739,9 @@ class PlayParser ( Parser ):
             self.exitRule()
         return localctx
 
-
     class ClassCreationContext(ParserRuleContext):
 
-        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -2962,8 +2749,7 @@ class PlayParser ( Parser ):
             return self.getToken(PlayParser.NEW, 0)
 
         def classType(self):
-            return self.getTypedRuleContext(PlayParser.ClassTypeContext,0)
-
+            return self.getTypedRuleContext(PlayParser.ClassTypeContext, 0)
 
         def LPAREN(self):
             return self.getToken(PlayParser.LPAREN, 0)
@@ -2972,20 +2758,16 @@ class PlayParser ( Parser ):
             return self.getToken(PlayParser.RPAREN, 0)
 
         def expressionList(self):
-            return self.getTypedRuleContext(PlayParser.ExpressionListContext,0)
-
+            return self.getTypedRuleContext(PlayParser.ExpressionListContext, 0)
 
         def getRuleIndex(self):
             return PlayParser.RULE_classCreation
-
-
-
 
     def classCreation(self):
 
         localctx = PlayParser.ClassCreationContext(self, self._ctx, self.state)
         self.enterRule(localctx, 74, self.RULE_classCreation)
-        self._la = 0 # Token type
+        self._la = 0  # Token type
         try:
             self.enterOuterAlt(localctx, 1)
             self.state = 421
@@ -2997,10 +2779,13 @@ class PlayParser ( Parser ):
             self.state = 425
             self._errHandler.sync(self)
             _la = self._input.LA(1)
-            if (((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << PlayParser.THIS) | (1 << PlayParser.SUPER) | (1 << PlayParser.NEW) | (1 << PlayParser.DECIMAL_LITERAL) | (1 << PlayParser.HEX_LITERAL) | (1 << PlayParser.OCT_LITERAL) | (1 << PlayParser.BINARY_LITERAL) | (1 << PlayParser.FLOAT_LITERAL) | (1 << PlayParser.BOOL_LITERAL) | (1 << PlayParser.BYTE_LITERAL) | (1 << PlayParser.STRING_LITERAL) | (1 << PlayParser.NULL_LITERAL) | (1 << PlayParser.LPAREN) | (1 << PlayParser.ADD) | (1 << PlayParser.SUB))) != 0) or ((((_la - 65)) & ~0x3f) == 0 and ((1 << (_la - 65)) & ((1 << (PlayParser.BANG - 65)) | (1 << (PlayParser.TILDE - 65)) | (1 << (PlayParser.IDENTIFIER - 65)))) != 0):
+            if (((_la) & ~0x3f) == 0 and ((1 << _la) & (
+                    (1 << PlayParser.THIS) | (1 << PlayParser.SUPER) | (1 << PlayParser.NEW) | (1 << PlayParser.DECIMAL_LITERAL) | (1 << PlayParser.HEX_LITERAL) | (1 << PlayParser.OCT_LITERAL) | (
+                    1 << PlayParser.BINARY_LITERAL) | (1 << PlayParser.FLOAT_LITERAL) | (1 << PlayParser.BOOL_LITERAL) | (1 << PlayParser.BYTE_LITERAL) | (1 << PlayParser.STRING_LITERAL) | (
+                            1 << PlayParser.NULL_LITERAL) | (1 << PlayParser.LPAREN) | (1 << PlayParser.ADD) | (1 << PlayParser.SUB))) != 0) or (
+                    (((_la - 65)) & ~0x3f) == 0 and ((1 << (_la - 65)) & ((1 << (PlayParser.BANG - 65)) | (1 << (PlayParser.TILDE - 65)) | (1 << (PlayParser.IDENTIFIER - 65)))) != 0):
                 self.state = 424
                 self.expressionList()
-
 
             self.state = 427
             self.match(PlayParser.RPAREN)
@@ -3012,10 +2797,9 @@ class PlayParser ( Parser ):
             self.exitRule()
         return localctx
 
-
     class MethodCallContext(ParserRuleContext):
 
-        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -3035,25 +2819,21 @@ class PlayParser ( Parser ):
             return self.getToken(PlayParser.SUPER, 0)
 
         def expressionList(self):
-            return self.getTypedRuleContext(PlayParser.ExpressionListContext,0)
-
+            return self.getTypedRuleContext(PlayParser.ExpressionListContext, 0)
 
         def getRuleIndex(self):
             return PlayParser.RULE_methodCall
-
-
-
 
     def methodCall(self):
 
         localctx = PlayParser.MethodCallContext(self, self._ctx, self.state)
         self.enterRule(localctx, 76, self.RULE_methodCall)
-        self._la = 0 # Token type
+        self._la = 0  # Token type
         try:
             self.enterOuterAlt(localctx, 1)
             self.state = 429
             _la = self._input.LA(1)
-            if not(_la==PlayParser.THIS or _la==PlayParser.SUPER or _la==PlayParser.IDENTIFIER):
+            if not (_la == PlayParser.THIS or _la == PlayParser.SUPER or _la == PlayParser.IDENTIFIER):
                 self._errHandler.recoverInline(self)
             else:
                 self._errHandler.reportMatch(self)
@@ -3063,10 +2843,13 @@ class PlayParser ( Parser ):
             self.state = 432
             self._errHandler.sync(self)
             _la = self._input.LA(1)
-            if (((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << PlayParser.THIS) | (1 << PlayParser.SUPER) | (1 << PlayParser.NEW) | (1 << PlayParser.DECIMAL_LITERAL) | (1 << PlayParser.HEX_LITERAL) | (1 << PlayParser.OCT_LITERAL) | (1 << PlayParser.BINARY_LITERAL) | (1 << PlayParser.FLOAT_LITERAL) | (1 << PlayParser.BOOL_LITERAL) | (1 << PlayParser.BYTE_LITERAL) | (1 << PlayParser.STRING_LITERAL) | (1 << PlayParser.NULL_LITERAL) | (1 << PlayParser.LPAREN) | (1 << PlayParser.ADD) | (1 << PlayParser.SUB))) != 0) or ((((_la - 65)) & ~0x3f) == 0 and ((1 << (_la - 65)) & ((1 << (PlayParser.BANG - 65)) | (1 << (PlayParser.TILDE - 65)) | (1 << (PlayParser.IDENTIFIER - 65)))) != 0):
+            if (((_la) & ~0x3f) == 0 and ((1 << _la) & (
+                    (1 << PlayParser.THIS) | (1 << PlayParser.SUPER) | (1 << PlayParser.NEW) | (1 << PlayParser.DECIMAL_LITERAL) | (1 << PlayParser.HEX_LITERAL) | (1 << PlayParser.OCT_LITERAL) | (
+                    1 << PlayParser.BINARY_LITERAL) | (1 << PlayParser.FLOAT_LITERAL) | (1 << PlayParser.BOOL_LITERAL) | (1 << PlayParser.BYTE_LITERAL) | (1 << PlayParser.STRING_LITERAL) | (
+                            1 << PlayParser.NULL_LITERAL) | (1 << PlayParser.LPAREN) | (1 << PlayParser.ADD) | (1 << PlayParser.SUB))) != 0) or (
+                    (((_la - 65)) & ~0x3f) == 0 and ((1 << (_la - 65)) & ((1 << (PlayParser.BANG - 65)) | (1 << (PlayParser.TILDE - 65)) | (1 << (PlayParser.IDENTIFIER - 65)))) != 0):
                 self.state = 431
                 self.expressionList()
-
 
             self.state = 434
             self.match(PlayParser.RPAREN)
@@ -3078,21 +2861,19 @@ class PlayParser ( Parser ):
             self.exitRule()
         return localctx
 
-
     class ExpressionListContext(ParserRuleContext):
 
-        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
-        def expression(self, i:int=None):
+        def expression(self, i: int = None):
             if i is None:
                 return self.getTypedRuleContexts(PlayParser.ExpressionContext)
             else:
-                return self.getTypedRuleContext(PlayParser.ExpressionContext,i)
+                return self.getTypedRuleContext(PlayParser.ExpressionContext, i)
 
-
-        def COMMA(self, i:int=None):
+        def COMMA(self, i: int = None):
             if i is None:
                 return self.getTokens(PlayParser.COMMA)
             else:
@@ -3101,14 +2882,11 @@ class PlayParser ( Parser ):
         def getRuleIndex(self):
             return PlayParser.RULE_expressionList
 
-
-
-
     def expressionList(self):
 
         localctx = PlayParser.ExpressionListContext(self, self._ctx, self.state)
         self.enterRule(localctx, 78, self.RULE_expressionList)
-        self._la = 0 # Token type
+        self._la = 0  # Token type
         try:
             self.enterOuterAlt(localctx, 1)
             self.state = 436
@@ -3116,7 +2894,7 @@ class PlayParser ( Parser ):
             self.state = 441
             self._errHandler.sync(self)
             _la = self._input.LA(1)
-            while _la==PlayParser.COMMA:
+            while _la == PlayParser.COMMA:
                 self.state = 437
                 self.match(PlayParser.COMMA)
                 self.state = 438
@@ -3133,9 +2911,7 @@ class PlayParser ( Parser ):
             self.exitRule()
         return localctx
 
-
-
-    def sempred(self, localctx:RuleContext, ruleIndex:int, predIndex:int):
+    def sempred(self, localctx: RuleContext, ruleIndex: int, predIndex: int):
         if self._predicates == None:
             self._predicates = dict()
         self._predicates[23] = self.expression_sempred
@@ -3156,106 +2932,80 @@ class PlayParser ( Parser ):
         else:
             return pred(localctx, predIndex)
 
-    def expression_sempred(self, localctx:ExpressionContext, predIndex:int):
-            if predIndex == 0:
-                return self.precpred(self._ctx, 3)
-         
+    def expression_sempred(self, localctx: ExpressionContext, predIndex: int):
+        if predIndex == 0:
+            return self.precpred(self._ctx, 3)
 
-            if predIndex == 1:
-                return self.precpred(self._ctx, 2)
-         
+        if predIndex == 1:
+            return self.precpred(self._ctx, 2)
 
-    def logicalOrExpression_sempred(self, localctx:LogicalOrExpressionContext, predIndex:int):
-            if predIndex == 2:
-                return self.precpred(self._ctx, 1)
-         
+    def logicalOrExpression_sempred(self, localctx: LogicalOrExpressionContext, predIndex: int):
+        if predIndex == 2:
+            return self.precpred(self._ctx, 1)
 
-    def logicalAndExpression_sempred(self, localctx:LogicalAndExpressionContext, predIndex:int):
-            if predIndex == 3:
-                return self.precpred(self._ctx, 1)
-         
+    def logicalAndExpression_sempred(self, localctx: LogicalAndExpressionContext, predIndex: int):
+        if predIndex == 3:
+            return self.precpred(self._ctx, 1)
 
-    def inclusiveOrExpression_sempred(self, localctx:InclusiveOrExpressionContext, predIndex:int):
-            if predIndex == 4:
-                return self.precpred(self._ctx, 1)
-         
+    def inclusiveOrExpression_sempred(self, localctx: InclusiveOrExpressionContext, predIndex: int):
+        if predIndex == 4:
+            return self.precpred(self._ctx, 1)
 
-    def exclusiveOrExpression_sempred(self, localctx:ExclusiveOrExpressionContext, predIndex:int):
-            if predIndex == 5:
-                return self.precpred(self._ctx, 1)
-         
+    def exclusiveOrExpression_sempred(self, localctx: ExclusiveOrExpressionContext, predIndex: int):
+        if predIndex == 5:
+            return self.precpred(self._ctx, 1)
 
-    def andExpression_sempred(self, localctx:AndExpressionContext, predIndex:int):
-            if predIndex == 6:
-                return self.precpred(self._ctx, 1)
-         
+    def andExpression_sempred(self, localctx: AndExpressionContext, predIndex: int):
+        if predIndex == 6:
+            return self.precpred(self._ctx, 1)
 
-    def equalityExpression_sempred(self, localctx:EqualityExpressionContext, predIndex:int):
-            if predIndex == 7:
-                return self.precpred(self._ctx, 2)
-         
+    def equalityExpression_sempred(self, localctx: EqualityExpressionContext, predIndex: int):
+        if predIndex == 7:
+            return self.precpred(self._ctx, 2)
 
-            if predIndex == 8:
-                return self.precpred(self._ctx, 1)
-         
+        if predIndex == 8:
+            return self.precpred(self._ctx, 1)
 
-    def relationalExpression_sempred(self, localctx:RelationalExpressionContext, predIndex:int):
-            if predIndex == 9:
-                return self.precpred(self._ctx, 4)
-         
+    def relationalExpression_sempred(self, localctx: RelationalExpressionContext, predIndex: int):
+        if predIndex == 9:
+            return self.precpred(self._ctx, 4)
 
-            if predIndex == 10:
-                return self.precpred(self._ctx, 3)
-         
+        if predIndex == 10:
+            return self.precpred(self._ctx, 3)
 
-            if predIndex == 11:
-                return self.precpred(self._ctx, 2)
-         
+        if predIndex == 11:
+            return self.precpred(self._ctx, 2)
 
-            if predIndex == 12:
-                return self.precpred(self._ctx, 1)
-         
+        if predIndex == 12:
+            return self.precpred(self._ctx, 1)
 
-    def shiftExpression_sempred(self, localctx:ShiftExpressionContext, predIndex:int):
-            if predIndex == 13:
-                return self.precpred(self._ctx, 3)
-         
+    def shiftExpression_sempred(self, localctx: ShiftExpressionContext, predIndex: int):
+        if predIndex == 13:
+            return self.precpred(self._ctx, 3)
 
-            if predIndex == 14:
-                return self.precpred(self._ctx, 2)
-         
+        if predIndex == 14:
+            return self.precpred(self._ctx, 2)
 
-            if predIndex == 15:
-                return self.precpred(self._ctx, 1)
-         
+        if predIndex == 15:
+            return self.precpred(self._ctx, 1)
 
-    def additiveExpression_sempred(self, localctx:AdditiveExpressionContext, predIndex:int):
-            if predIndex == 16:
-                return self.precpred(self._ctx, 2)
-         
+    def additiveExpression_sempred(self, localctx: AdditiveExpressionContext, predIndex: int):
+        if predIndex == 16:
+            return self.precpred(self._ctx, 2)
 
-            if predIndex == 17:
-                return self.precpred(self._ctx, 1)
-         
+        if predIndex == 17:
+            return self.precpred(self._ctx, 1)
 
-    def multiplicativeExpression_sempred(self, localctx:MultiplicativeExpressionContext, predIndex:int):
-            if predIndex == 18:
-                return self.precpred(self._ctx, 3)
-         
+    def multiplicativeExpression_sempred(self, localctx: MultiplicativeExpressionContext, predIndex: int):
+        if predIndex == 18:
+            return self.precpred(self._ctx, 3)
 
-            if predIndex == 19:
-                return self.precpred(self._ctx, 2)
-         
+        if predIndex == 19:
+            return self.precpred(self._ctx, 2)
 
-            if predIndex == 20:
-                return self.precpred(self._ctx, 1)
-         
+        if predIndex == 20:
+            return self.precpred(self._ctx, 1)
 
-    def castExpression_sempred(self, localctx:CastExpressionContext, predIndex:int):
-            if predIndex == 21:
-                return self.precpred(self._ctx, 2)
-         
-
-
-
-
+    def castExpression_sempred(self, localctx: CastExpressionContext, predIndex: int):
+        if predIndex == 21:
+            return self.precpred(self._ctx, 2)

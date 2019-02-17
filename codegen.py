@@ -1,16 +1,18 @@
 import hashlib
+from typing import List
 
 from llvmlite import ir
 
 from ast import Class, Method, MethodGroup, Field, Type, ObjectType, Block, Statement, ExprStatement, WhileStatement, IfStatement, AssignStatement, ReturnStatement, Expr, \
     Variable, BinExpr, UnaryExpr, CastExpr, ClassCreation, MethodCall, ClassExpr, FieldAccess, Literal, Parameter
 from builtin import BOOLEAN_TYPE, BYTE_TYPE, SHORT_TYPE, INT_TYPE, LONG_TYPE, FLOAT_TYPE, DOUBLE_TYPE, REAL_NUMBERS, PLAY_PACKAGE
+from context import Context
 from flow import is_terminal
 from phase import Phase
 from report import Report
 from symbol import SymbolTable
-from util import never_be_here
-from visitor import class_name
+from translate import lookup_method
+from util import never_be_here, class_name
 
 int1 = ir.IntType(1)
 int8 = ir.IntType(8)
@@ -126,6 +128,21 @@ def new_string(module, s):
     return data
 
 
+class BasicBlock(object):
+    def __init__(self):
+        self.block: ir.Block = None
+        self.blocks: List[BasicBlock] = []
+
+    def get_blocks(self):
+        ret = [self.block]
+        for b in self.blocks:
+            ret.extend(b.get_blocks())
+        return ret
+
+    def __repr__(self):
+        return self.block.name
+
+
 class GenEnv(object):
     def __init__(self, method: Method):
         self.method = method
@@ -154,6 +171,7 @@ class Codegen(Phase):
         self.current_method: Method = None
         self.env: GenEnv = None
         self.loop_context = []
+        self.basic_blocks = []
 
     def run(self):
         obj_ptr = create_class_struct(PLAY_PACKAGE.children['Object']).as_pointer()
@@ -167,9 +185,12 @@ class Codegen(Phase):
 
         Report().end()
 
-        print(self.module)
+        self.gen_main()
 
-    def get_method(self, method: Method):
+        with open(Context().code_gen_file, 'w') as f:
+            f.write(str(self.module))
+
+    def get_method(self, method: Method) -> ir.Function:
         name = get_method_name(method)
         if name not in METHODS:
             parameters = [create_type(p.type) for p in method.parameters]
@@ -201,16 +222,46 @@ class Codegen(Phase):
         for field in method.owner.get_inherited_fields():
             self.env.enter(field.name, field)
         self.env.push()
-        self.builder = ir.IRBuilder(func.append_basic_block('entry'))
+
+        entry = self.basic_block(func, 'entry')
+        self.basic_blocks = [entry]
+        self.builder = ir.IRBuilder(entry.block)
+        # self.builder = ir.IRBuilder(func.append_basic_block('entry'))
         parameters = self.current_method.parameters[:]
         if not method.is_static:
             parameters.insert(0, Parameter('this', ObjectType(method.owner)))
         for i, arg in enumerate(self.builder.function.args):
             self.env.enter(parameters[i].name, arg)
         self.block(method.body)
+        func.blocks = entry.get_blocks()
+        max_i = len(func.blocks) - 1
+        for i, block in enumerate(func.blocks):
+            if not block.is_terminated:
+                if i < max_i:
+                    ir.IRBuilder(block).branch(self.builder.function.blocks[i + 1])
+                else:
+                    ir.IRBuilder(block).ret_void()
         self.env.pop()
 
         self.env.pop()
+
+    def gen_main(self):
+        type = ir.FunctionType(ir.IntType(32), [])
+        # print(type)
+        func = ir.Function(self.module, type, name='main')
+        entry = func.append_basic_block('entry')
+        builder = ir.IRBuilder(entry)
+        bootstrap_class = SymbolTable().get_class(Context().bootstrap_class)
+        method = lookup_method(bootstrap_class, 'main', [], is_static=True)
+        builder.call(self.get_method(method), [])
+        builder.ret(ir.Constant(ir.IntType(32), 0))
+
+    def basic_block(self, func, name):
+        block = BasicBlock()
+        block.block = ir.Block(parent=func, name=name)
+        if self.basic_blocks:
+            self.basic_blocks[-1].blocks.append(block)
+        return block
 
     def block(self, block: Block):
         self.env.push()
@@ -224,20 +275,28 @@ class Codegen(Phase):
         getattr(self, class_name(statement))(statement)
 
     def while_statement(self, statement: WhileStatement):
-        loop = self.builder.append_basic_block('while.loop')
-        body = self.builder.append_basic_block('while.body')
-        end = self.builder.append_basic_block('while.end')
+        loop = self.basic_block(self.builder.function, 'while.loop')
+        body = self.basic_block(self.builder.function, 'while.body')
+        end = self.basic_block(self.builder.function, 'while.end')
+        self.builder.branch(loop.block)
 
-        self.builder = ir.IRBuilder(loop)
-        cond = self.expression(statement.expression)
-        self.builder.cbranch(cond, body, end)
-        self.builder = ir.IRBuilder(body)
-        self.loop_context.append({'loop': loop, 'end': end})
+        self.builder = ir.IRBuilder(loop.block)
+        self.basic_blocks.append(loop)
+        cond = self.expr(statement.expr)
+        self.basic_blocks.pop()
+        self.builder.cbranch(cond, body.block, end.block)
+
+        self.loop_context.append({'loop': loop.block, 'end': end.block})
+        self.basic_blocks.append(body)
+        self.builder = ir.IRBuilder(body.block)
         self.block(statement.block)
+        self.basic_blocks.pop()
         if not self.builder.block.is_terminated:
-            self.builder.branch(loop)
+            self.builder.branch(loop.block)
         self.loop_context.pop()
-        self.builder = ir.IRBuilder(end)
+
+        self.basic_blocks.append(end)
+        self.builder = ir.IRBuilder(end.block)
 
     def break_statement(self, _):
         self.builder.branch(self.loop_context[-1]['end'])
@@ -246,28 +305,34 @@ class Codegen(Phase):
         self.builder.branch(self.loop_context[-1]['loop'])
 
     def if_statement(self, statement: IfStatement):
-        cond = self.expression(statement.expression)
-        then = self.builder.append_basic_block(name='if.then')
+        cond = self.expr(statement.expr)
+        then = self.basic_block(self.builder.function, 'if.then')
         if statement.otherwise:
-            otherwise = self.builder.append_basic_block(name='if.else')
+            otherwise = self.basic_block(self.builder.function, 'if.else')
         else:
             otherwise = None
-        end = self.builder.append_basic_block(name='if.end')
-        old_builder = self.builder
-        self.builder = ir.IRBuilder(then)
+        end = self.basic_block(self.builder.function, 'if.end')
+        self.builder.cbranch(cond, then.block, (otherwise or end).block)
+
+        self.builder = ir.IRBuilder(then.block)
+        self.basic_blocks.append(then)
         self.block(statement.then)
         if not self.builder.block.is_terminated:
-            self.builder.branch(end)
+            self.builder.branch(end.block)
+        self.basic_blocks.pop()
+
         if otherwise:
-            self.builder = ir.IRBuilder(otherwise)
+            self.builder = ir.IRBuilder(otherwise.block)
+            self.basic_blocks.append(otherwise)
             self.block(statement.otherwise)
-            self.builder.branch(end)
-        self.builder = old_builder
-        self.builder.cbranch(cond, then, otherwise or end)
-        self.builder = ir.IRBuilder(end)
+            self.builder.branch(end.block)
+            self.basic_blocks.pop()
+
+        self.basic_blocks.append(end)
+        self.builder = ir.IRBuilder(end.block)
 
     def assign_statement(self, statement: AssignStatement):
-        expr = self.expression(statement.expr)
+        expr = self.expr(statement.expr)
         if isinstance(statement.var, Variable):
             var = self.assign_variable(statement.var)
         else:
@@ -277,7 +342,8 @@ class Codegen(Phase):
     def assign_variable(self, expr: Variable) -> ir.Value:
         var = self.env.lookup(expr.name)
         if isinstance(var, Field):
-            return self.builder.gep(self.builder.function.args[0], [ir.Constant(int32, 0), ir.Constant(int32, self.current_method.owner.get_inherited_fields().index(var))], inbounds=True,
+            return self.builder.gep(self.builder.function.args[0],
+                                    [ir.Constant(int32, 0), ir.Constant(int32, self.current_method.owner.get_inherited_fields().index(var))], inbounds=True,
                                     name=var.name + '_ptr')
         if not var:
             var = self.builder.alloca(create_type(expr.type), name=expr.name)
@@ -285,15 +351,15 @@ class Codegen(Phase):
         return var
 
     def return_statement(self, statement: ReturnStatement):
-        if statement.expression:
-            self.builder.ret(self.expression(statement.expression))
+        if statement.expr:
+            self.builder.ret(self.expr(statement.expr))
         else:
             self.builder.ret(None)
 
     def expr_statement(self, statement: ExprStatement):
-        self.expression(statement.expr)
+        self.expr(statement.expr)
 
-    def expression(self, expr: Expr) -> ir.Value:
+    def expr(self, expr: Expr) -> ir.Value:
         return getattr(self, class_name(expr))(expr)
 
     def variable(self, expr: Variable) -> ir.Value:
@@ -310,76 +376,78 @@ class Codegen(Phase):
 
         if expr.op in {'||', '&&'}:
             cond_ptr = self.builder.alloca(ir.IntType(1), name='cond_ptr')
-            cond_left = self.builder.append_basic_block('cond.left')
-            true = self.builder.append_basic_block('cond.true')
-            false = self.builder.append_basic_block('cond.false')
-            end = self.builder.append_basic_block('cond.end')
+            cond_left = self.basic_block(self.builder.function, 'cond.left')
+            true = self.basic_block(self.builder.function, 'cond.true')
+            false = self.basic_block(self.builder.function, 'cond.false')
+            end = self.basic_block(self.builder.function, 'cond.end')
             if expr.op == '||':
-                self.builder.cbranch(self.expression(expr.left), true, cond_left)
+                self.builder.cbranch(self.expr(expr.left), true.block, cond_left.block)
             else:
-                self.builder.cbranch(self.expression(expr.left), cond_left, false)
+                self.builder.cbranch(self.expr(expr.left), cond_left.block, false.block)
 
-            self.builder = ir.IRBuilder(true)
+            self.builder = ir.IRBuilder(true.block)
             self.builder.store(ir.Constant(ir.IntType(1), 1), cond_ptr)
-            self.builder.branch(end)
+            self.builder.branch(end.block)
 
-            self.builder = ir.IRBuilder(false)
+            self.builder = ir.IRBuilder(false.block)
             self.builder.store(ir.Constant(ir.IntType(1), 0), cond_ptr)
-            self.builder.branch(end)
+            self.builder.branch(end.block)
 
-            self.builder = ir.IRBuilder(cond_left)
-            self.builder.cbranch(self.expression(expr.right), true, false)
+            self.builder = ir.IRBuilder(cond_left.block)
+            self.basic_blocks.append(cond_left)
+            self.builder.cbranch(self.expr(expr.right), true.block, false.block)
+            self.basic_blocks.pop()
 
-            self.builder = ir.IRBuilder(end)
+            self.builder = ir.IRBuilder(end.block)
             return self.builder.load(cond_ptr, name='cond')
         if expr.op == '+':
             if is_float:
-                return self.builder.fadd(self.expression(expr.left), self.expression(expr.right))
-            return self.builder.add(self.expression(expr.left), self.expression(expr.right))
+                return self.builder.fadd(self.expr(expr.left), self.expr(expr.right))
+            return self.builder.add(self.expr(expr.left), self.expr(expr.right))
         if expr.op == '-':
             if is_float:
-                return self.builder.fsub(self.expression(expr.left), self.expression(expr.right))
-            return self.builder.sub(self.expression(expr.left), self.expression(expr.right))
+                return self.builder.fsub(self.expr(expr.left), self.expr(expr.right))
+            return self.builder.sub(self.expr(expr.left), self.expr(expr.right))
         if expr.op == '*':
             if is_float:
-                return self.builder.fmul(self.expression(expr.left), self.expression(expr.right))
-            return self.builder.mul(self.expression(expr.left), self.expression(expr.right))
+                return self.builder.fmul(self.expr(expr.left), self.expr(expr.right))
+            return self.builder.mul(self.expr(expr.left), self.expr(expr.right))
         if expr.op == '/':
             if is_float:
-                return self.builder.fdiv(self.expression(expr.left), self.expression(expr.right))
-            return self.builder.sdiv(self.expression(expr.left), self.expression(expr.right))
+                return self.builder.fdiv(self.expr(expr.left), self.expr(expr.right))
+            return self.builder.sdiv(self.expr(expr.left), self.expr(expr.right))
         if expr.op == '%':
             if is_float:
-                return self.builder.frem(self.expression(expr.left), self.expression(expr.right))
-            return self.builder.srem(self.expression(expr.left), self.expression(expr.right))
+                return self.builder.frem(self.expr(expr.left), self.expr(expr.right))
+            return self.builder.srem(self.expr(expr.left), self.expr(expr.right))
         if expr.op in {'<', '>', '<=', '>=', '==', '!='}:
             if is_float:
-                return self.builder.fcmp_ordered(expr.op, self.expression(expr.left), self.expression(expr.right))
-            return self.builder.icmp_signed(expr.op, self.expression(expr.left), self.expression(expr.right))
+                return self.builder.fcmp_ordered(expr.op, self.expr(expr.left), self.expr(expr.right))
+            return self.builder.icmp_signed(expr.op, self.expr(expr.left), self.expr(expr.right))
         if expr.op == '<<':
-            return self.builder.shl(self.expression(expr.left), self.expression(expr.right))
+            return self.builder.shl(self.expr(expr.left), self.expr(expr.right))
         if expr.op == '>>':
-            return self.builder.lshr(self.expression(expr.left), self.expression(expr.right))
+            return self.builder.lshr(self.expr(expr.left), self.expr(expr.right))
         if expr.op == '>>>':
-            return self.builder.ashr(self.expression(expr.left), self.expression(expr.right))
+            return self.builder.ashr(self.expr(expr.left), self.expr(expr.right))
         if expr.op == '|':
-            return self.builder.or_(self.expression(expr.left), self.expression(expr.right))
+            return self.builder.or_(self.expr(expr.left), self.expr(expr.right))
         if expr.op == '^':
-            return self.builder.xor(self.expression(expr.left), self.expression(expr.right))
+            return self.builder.xor(self.expr(expr.left), self.expr(expr.right))
         if expr.op == '&':
-            return self.builder.and_(self.expression(expr.left), self.expression(expr.right))
+            return self.builder.and_(self.expr(expr.left), self.expr(expr.right))
         never_be_here()
 
     def unary_expr(self, expr: UnaryExpr) -> ir.Value:
         if expr.op == '-':
-            return self.builder.neg(self.expression(expr.expr))
+            return self.builder.neg(self.expr(expr.expr))
         if expr.op in {'~', '!'}:
-            return self.builder.not_(self.expression(expr.expr))
-        return self.expression(expr.expr)
+            return self.builder.not_(self.expr(expr.expr))
+        return self.expr(expr.expr)
 
     def cast_expr(self, expr: CastExpr) -> ir.Value:
         obj_ptr = create_class_struct(PLAY_PACKAGE.children['Object']).as_pointer()
-        return self.builder.bitcast(self.builder.call(FUNCTIONS['cast'], [self.builder.bitcast(self.expression(expr.expr), obj_ptr)]), create_type(expr.type))
+        return self.builder.bitcast(self.builder.call(FUNCTIONS['cast'], [self.builder.bitcast(self.expr(expr.expr), obj_ptr)]), create_type(expr.type))
 
     def class_creation(self, expr: ClassCreation) -> ir.Value:
         # FIXME real new
@@ -388,11 +456,11 @@ class Codegen(Phase):
     def method_call(self, expr: MethodCall) -> ir.Value:
         # TODO for member, invoke by lookup
         if isinstance(expr.select, ClassExpr):
-            args = [self.expression(arg) for arg in expr.arguments]
+            args = [self.expr(arg) for arg in expr.arguments]
             return self.builder.call(self.get_method(expr.method), args)
         if expr.select:
-            args = [self.expression(arg) for arg in expr.arguments]
-            args.insert(0, self.expression(expr.select))
+            args = [self.expr(arg) for arg in expr.arguments]
+            args.insert(0, self.expr(expr.select))
             return self.builder.call(self.get_method(expr.method), args)
         # TODO lookup method in this/super
         raise NotImplementedError
@@ -403,7 +471,7 @@ class Codegen(Phase):
                                    name=expr.field.name + '_ptr')
             return self.builder.load(ptr, name=expr.field.name)
 
-        ptr = self.builder.gep(self.expression(expr.select), [ir.Constant(int32, 0), ir.Constant(int32, expr.field.owner.get_inherited_fields().index(expr.field))], inbounds=True,
+        ptr = self.builder.gep(self.expr(expr.select), [ir.Constant(int32, 0), ir.Constant(int32, expr.field.owner.get_inherited_fields().index(expr.field))], inbounds=True,
                                name=expr.field.name + '_ptr')
         if not load:
             return ptr

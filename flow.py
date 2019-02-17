@@ -1,32 +1,10 @@
-from typing import Set, List
+from typing import List
 
-from ast import Class, Method, Statement, LoopStatement, IfStatement, ReturnStatement, Block, BreakStatement, ContinueStatement, MethodGroup
+from ast import Method, Statement, LoopStatement, IfStatement, ReturnStatement, Block, BreakStatement, ContinueStatement, MethodGroup
 from phase import Phase
 from report import Report
 from symbol import SymbolTable
 from util import CompileException
-from visitor import StatementVisitor
-
-
-class LoopVisitor(StatementVisitor):
-    def __init__(self):
-        self.loop = []
-        self.exceptions: List[Set[Class]] = [set()]
-
-    def visit(self, node: Statement):
-        if isinstance(node, LoopStatement):
-            self.loop.append(node)
-        super().visit(node)
-        if isinstance(node, LoopStatement):
-            self.loop.pop()
-
-    def enter_break_statement(self, _):
-        if not self.loop:
-            raise CompileException('break must inside loop')
-
-    def enter_continue_statement(self, _):
-        if not self.loop:
-            raise CompileException('continue must inside loop')
 
 
 def is_terminal(statement: Statement) -> bool:
@@ -66,7 +44,6 @@ class ControlFlowAnalyse(Phase):
     def analyse(self, method: Method):
         if not method.body:
             return
-        print('check', method.name)
         self.check_inside_loop(method.body)
         self.check_has_return(method)
 

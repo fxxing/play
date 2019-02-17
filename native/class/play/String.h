@@ -6,7 +6,7 @@
 #include <play/Object.h>
 
 Class(play_String, {
-    int length;
+    pint length;
     char *value;
 });
 

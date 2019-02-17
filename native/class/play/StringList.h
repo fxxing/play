@@ -6,7 +6,7 @@
 #include <play/String.h>
 
 Class(play_StringList, {
-    int length;
+    pint length;
     play_String items;
 });
 

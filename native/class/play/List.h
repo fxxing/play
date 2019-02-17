@@ -6,7 +6,7 @@
 #include <play/Object.h>
 
 Class(play_List, {
-    int length;
+    pint length;
     play_Object items;
 });
 
