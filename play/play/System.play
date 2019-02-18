@@ -1,4 +1,5 @@
 class System {
 	native static def print(str: String)
 	native static def print(value: int)
+	native static def gc()
 }

@@ -19,7 +19,7 @@ typedef long plong;
 typedef float pfloat;
 typedef double pdouble;
 
-#define OBJECT_HEADER   ugc_header_t *next;ugc_header_t *prev;int classId;
+#define OBJECT_HEADER  int classId;
 
 #define TRUE 1
 #define FALSE 0

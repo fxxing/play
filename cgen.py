@@ -120,7 +120,7 @@ class RuntimeGen(Phase):
 
         externals = set()
         method_assigns = {}
-        class_assigns = []
+        # class_assigns = []
         class_children = []
         class_list = ['NATIVE Class CLASSES[] = {']
         class_ids = []
@@ -146,11 +146,11 @@ class RuntimeGen(Phase):
                 flag |= 2
             if cls.is_native:
                 flag |= 4
-            new_method = cls.qualified_name.replace('.', '_') + '_new'
-            externals.add('extern int ' + new_method + ';')
-            class_assigns.append(new_method)
+            # new_method = cls.qualified_name.replace('.', '_') + '_new'
+            # externals.add('extern int ' + new_method + ';')
+            # class_assigns.append(new_method)
             class_list.append(
-                '    {' + '"{}", {}, NULL,  {}, {}, {}_superclasses, {}, {}_methods'.format(
+                '    {' + '"{}", {},  {}, {}, {}_superclasses, {}, {}_methods'.format(
                     cls.qualified_name, i, flag, len(superclasses), cls_name, len(cls.inherited_methods), cls_name) + '},')
         class_list.append('};')
 
@@ -159,9 +159,9 @@ class RuntimeGen(Phase):
         content.extend(class_children)
         content.extend(class_list)
 
-        content.append('NATIVE void initialize() {')
-        for i, v in enumerate(class_assigns):
-            content.append('    CLASSES[{}].new = &{};'.format(i, v))
+        content.append('NATIVE void initConst() {')
+        # for i, v in enumerate(class_assigns):
+        #     content.append('    CLASSES[{}].new = &{};'.format(i, v))
         for k, l in method_assigns.items():
             for i, v in enumerate(l):
                 content.append('    {}[{}].func = &{};'.format(k, i, v))

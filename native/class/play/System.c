@@ -9,3 +9,9 @@ NATIVE void play_System_s_print_V_I(pint value) {
     printf("%d\n", value);
 }
 
+extern void runGC();
+
+NATIVE void play_System_s_gc_V_() {
+    runGC();
+}
+

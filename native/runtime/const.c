@@ -13,62 +13,46 @@ int play_List_id = 9;
 int play_Object_id = 11;
 int play_String_id = 13;
 int play_StringList_id = 14;
-extern int HelloSub_test0_V_;
-extern int play_String_String_V_;
-extern int play_Byte_Byte_V_B;
-extern int play_Long_new;
-extern int Hello_new;
-extern int play_Double_Double_V_D;
-extern int play_List_List_V_;
-extern int play_String_concat_V_TZ;
-extern int play_Object_new;
-extern int Hello_Hello_V_;
-extern int play_String_concat_V_TB;
-extern int play_String_new;
-extern int play_Byte_getValue_B_;
-extern int play_Short_new;
-extern int play_StringList_get_T_I;
-extern int play_Double_new;
-extern int play_IntList_new;
-extern int play_String_concat_V_TT;
-extern int HelloSub_HelloSub_V_;
-extern int play_String_concat_V_TS;
-extern int play_StringList_new;
-extern int play_String_concat_V_TI;
-extern int play_Float_getValue_F_;
-extern int play_System_new;
-extern int play_Boolean_getValue_Z_;
-extern int play_Object_equals_Z_O;
-extern int play_Boolean_Boolean_V_Z;
-extern int play_String_concat_V_TO;
-extern int play_Byte_new;
 extern int HelloSub_test1_V_;
-extern int play_Int_getValue_I_;
-extern int play_IntList_get_I_I;
-extern int play_System_System_V_;
-extern int play_Class_new;
-extern int Hello___test1_V_;
+extern int play_Boolean_Boolean_V_Z;
 extern int play_Float_Float_V_F;
-extern int play_Float_new;
-extern int play_Int_Int_V_I;
-extern int HelloSub_new;
-extern int play_List_get_O_I;
 extern int play_StringList_StringList_V_;
-extern int play_Boolean_new;
-extern int play_Double_getValue_D_;
-extern int Hello_test0_V_;
-extern int play_Short_getValue_S_;
-extern int play_List_new;
-extern int play_Long_Long_V_L;
+extern int Hello_Hello_V_;
 extern int play_Class_Class_V_;
-extern int play_String_concat_V_TL;
-extern int play_String_concat_V_TD;
-extern int play_Long_getValue_L_;
-extern int play_IntList_IntList_V_;
-extern int play_String_concat_V_TF;
-extern int play_Int_new;
+extern int play_Double_Double_V_D;
+extern int play_Int_getValue_I_;
 extern int play_Object_Object_V_;
+extern int play_String_concat_V_TL;
+extern int play_Short_getValue_S_;
+extern int Hello___test1_V_;
+extern int play_String_concat_V_TI;
+extern int play_Double_getValue_D_;
+extern int play_System_System_V_;
+extern int play_Boolean_getValue_Z_;
+extern int play_String_String_V_;
+extern int play_IntList_IntList_V_;
+extern int play_Long_getValue_L_;
+extern int Hello_test0_V_;
+extern int play_String_concat_V_TO;
+extern int play_Byte_Byte_V_B;
+extern int play_String_concat_V_TD;
+extern int play_IntList_get_I_I;
+extern int play_String_concat_V_TS;
+extern int play_Int_Int_V_I;
+extern int HelloSub_test0_V_;
+extern int HelloSub_HelloSub_V_;
+extern int play_String_concat_V_TT;
+extern int play_List_List_V_;
+extern int play_StringList_get_T_I;
+extern int play_String_concat_V_TZ;
+extern int play_Long_Long_V_L;
+extern int play_String_concat_V_TF;
+extern int play_Object_equals_Z_O;
+extern int play_Byte_getValue_B_;
+extern int play_Float_getValue_F_;
 extern int play_Short_Short_V_S;
+extern int play_List_get_O_I;
+extern int play_String_concat_V_TB;
 int Hello_superclasses[] = {11};
 Method Hello_methods[] = {
     {"equals", 11, 0, "play.Object", NULL},
@@ -173,40 +157,24 @@ Method play_System_methods[] = {
     {"<init>", 15, 0, "", NULL},
 };
 NATIVE Class CLASSES[] = {
-    {"Hello", 0, NULL,  0, 1, Hello_superclasses, 4, Hello_methods},
-    {"HelloSub", 1, NULL,  0, 1, HelloSub_superclasses, 4, HelloSub_methods},
-    {"play.Boolean", 2, NULL,  0, 1, play_Boolean_superclasses, 3, play_Boolean_methods},
-    {"play.Byte", 3, NULL,  0, 1, play_Byte_superclasses, 3, play_Byte_methods},
-    {"play.Class", 4, NULL,  4, 1, play_Class_superclasses, 2, play_Class_methods},
-    {"play.Double", 5, NULL,  0, 1, play_Double_superclasses, 3, play_Double_methods},
-    {"play.Float", 6, NULL,  0, 1, play_Float_superclasses, 3, play_Float_methods},
-    {"play.Int", 7, NULL,  0, 1, play_Int_superclasses, 3, play_Int_methods},
-    {"play.IntList", 8, NULL,  4, 1, play_IntList_superclasses, 3, play_IntList_methods},
-    {"play.List", 9, NULL,  4, 1, play_List_superclasses, 3, play_List_methods},
-    {"play.Long", 10, NULL,  0, 1, play_Long_superclasses, 3, play_Long_methods},
-    {"play.Object", 11, NULL,  4, 0, play_Object_superclasses, 2, play_Object_methods},
-    {"play.Short", 12, NULL,  0, 1, play_Short_superclasses, 3, play_Short_methods},
-    {"play.String", 13, NULL,  4, 1, play_String_superclasses, 11, play_String_methods},
-    {"play.StringList", 14, NULL,  4, 1, play_StringList_superclasses, 3, play_StringList_methods},
-    {"play.System", 15, NULL,  0, 1, play_System_superclasses, 2, play_System_methods},
+    {"Hello", 0,  0, 1, Hello_superclasses, 4, Hello_methods},
+    {"HelloSub", 1,  0, 1, HelloSub_superclasses, 4, HelloSub_methods},
+    {"play.Boolean", 2,  0, 1, play_Boolean_superclasses, 3, play_Boolean_methods},
+    {"play.Byte", 3,  0, 1, play_Byte_superclasses, 3, play_Byte_methods},
+    {"play.Class", 4,  4, 1, play_Class_superclasses, 2, play_Class_methods},
+    {"play.Double", 5,  0, 1, play_Double_superclasses, 3, play_Double_methods},
+    {"play.Float", 6,  0, 1, play_Float_superclasses, 3, play_Float_methods},
+    {"play.Int", 7,  0, 1, play_Int_superclasses, 3, play_Int_methods},
+    {"play.IntList", 8,  4, 1, play_IntList_superclasses, 3, play_IntList_methods},
+    {"play.List", 9,  4, 1, play_List_superclasses, 3, play_List_methods},
+    {"play.Long", 10,  0, 1, play_Long_superclasses, 3, play_Long_methods},
+    {"play.Object", 11,  4, 0, play_Object_superclasses, 2, play_Object_methods},
+    {"play.Short", 12,  0, 1, play_Short_superclasses, 3, play_Short_methods},
+    {"play.String", 13,  4, 1, play_String_superclasses, 11, play_String_methods},
+    {"play.StringList", 14,  4, 1, play_StringList_superclasses, 3, play_StringList_methods},
+    {"play.System", 15,  0, 1, play_System_superclasses, 2, play_System_methods},
 };
-NATIVE void initialize() {
-    CLASSES[0].new = &Hello_new;
-    CLASSES[1].new = &HelloSub_new;
-    CLASSES[2].new = &play_Boolean_new;
-    CLASSES[3].new = &play_Byte_new;
-    CLASSES[4].new = &play_Class_new;
-    CLASSES[5].new = &play_Double_new;
-    CLASSES[6].new = &play_Float_new;
-    CLASSES[7].new = &play_Int_new;
-    CLASSES[8].new = &play_IntList_new;
-    CLASSES[9].new = &play_List_new;
-    CLASSES[10].new = &play_Long_new;
-    CLASSES[11].new = &play_Object_new;
-    CLASSES[12].new = &play_Short_new;
-    CLASSES[13].new = &play_String_new;
-    CLASSES[14].new = &play_StringList_new;
-    CLASSES[15].new = &play_System_new;
+NATIVE void initConst() {
     Hello_methods[0].func = &play_Object_equals_Z_O;
     Hello_methods[1].func = &Hello_test0_V_;
     Hello_methods[2].func = &Hello_Hello_V_;

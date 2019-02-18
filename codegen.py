@@ -6,12 +6,12 @@ from llvmlite import ir
 
 from ast import Class, Method, Field, Type, ObjectType, Block, Statement, ExprStatement, WhileStatement, IfStatement, AssignStatement, ReturnStatement, Expr, \
     Variable, BinExpr, UnaryExpr, CastExpr, ClassCreation, MethodCall, ClassExpr, FieldAccess, Literal, Parameter
-from type import BOOLEAN_TYPE, BYTE_TYPE, SHORT_TYPE, INT_TYPE, LONG_TYPE, FLOAT_TYPE, DOUBLE_TYPE, REAL_NUMBERS, PLAY_PACKAGE
 from context import Context
 from flow import is_terminal
 from phase import Phase
 from report import Report
 from symbol import SymbolTable
+from type import REAL_NUMBERS, PLAY_PACKAGE
 from util import never_be_here, class_name
 
 int1 = ir.IntType(1)
@@ -20,26 +20,23 @@ int16 = ir.IntType(16)
 int32 = ir.IntType(32)
 int64 = ir.IntType(64)
 
+ir_types = {
+    'boolean': int1,
+    'byte': int8,
+    'short': int16,
+    'int': int32,
+    'long': int64,
+    'float': ir.FloatType(),
+    'double': ir.DoubleType(),
+}
+
 
 def create_type(type: Type) -> ir.Type:
     if not type:
         return ir.VoidType()
     if isinstance(type, ObjectType):
         return create_class_struct(type.cls).as_pointer()
-    if type == BOOLEAN_TYPE:
-        return ir.IntType(1)
-    if type == BYTE_TYPE:
-        return ir.IntType(8)
-    if type == SHORT_TYPE:
-        return ir.IntType(16)
-    if type == INT_TYPE:
-        return ir.IntType(32)
-    if type == LONG_TYPE:
-        return ir.IntType(64)
-    if type == FLOAT_TYPE:
-        return ir.FloatType()
-    if type == DOUBLE_TYPE:
-        return ir.DoubleType()
+    return ir_types[type.name]
 
 
 def get_struct_size(struct: ir.IdentifiedStructType, packed=False):
@@ -82,38 +79,32 @@ def create_class_struct(cls: Class) -> ir.Type:
     if cls.is_native:
         return type
 
-    ptr = int32.as_pointer()
-    elements = [ptr, ptr, int32]
+    elements = [int32]
     elements.extend(create_type(field.type) for field in cls.inherited_fields)
     type.set_body(*elements)
     type.size = get_struct_size(type)
     return type
 
 
+sig_type_name = {
+    'boolean': 'Z',
+    'byte': 'B',
+    'short': 'S',
+    'int': 'I',
+    'long': 'L',
+    'float': 'F',
+    'double': 'D',
+    'play.String': 'T',
+    'play.Object': 'O',
+}
+
+
 def get_type_name(type: Type) -> str:
     if not type:
         return 'V'
-    if isinstance(type, ObjectType):
-        qualified_name = type.cls.qualified_name
-        if qualified_name == 'play.String':
-            return 'T'
-        if qualified_name == 'play.Object':
-            return 'O'
-        return 'C{}'.format(qualified_name.replace('.', '_'))
-    if type == BOOLEAN_TYPE:
-        return 'Z'
-    if type == BYTE_TYPE:
-        return 'B'
-    if type == SHORT_TYPE:
-        return 'S'
-    if type == INT_TYPE:
-        return 'I'
-    if type == LONG_TYPE:
-        return 'L'
-    if type == FLOAT_TYPE:
-        return 'F'
-    if type == DOUBLE_TYPE:
-        return 'D'
+    if type.name in sig_type_name:
+        return sig_type_name[type.name]
+    return 'C{}'.format(type.name.replace('.', '_'))
 
 
 def get_method_name(method: Method) -> str:
@@ -124,35 +115,6 @@ def get_method_name(method: Method) -> str:
     ret.append(get_type_name(method.return_type))
     ret.append(''.join([get_type_name(p.type) for p in method.parameters]))
     return '_'.join(ret)
-
-
-FUNCTIONS = {}
-
-
-def create_function(module, name, return_type, types):
-    if name not in FUNCTIONS:
-        type = ir.FunctionType(return_type, types)
-        func = ir.Function(module, type, name=name)
-        FUNCTIONS[name] = func
-
-
-STRINGS = {}
-
-
-def new_string(module, s):
-    if s in STRINGS:
-        return STRINGS[s]
-    es = s.encode('utf-8')
-    b = bytearray(es)
-    b.append(0)
-    n = len(b)
-    value = ir.Constant(ir.ArrayType(ir.IntType(8), n), b)
-    data = ir.GlobalVariable(module, value.type, name='str{}'.format(hashlib.md5(es).hexdigest()))
-    data.linkage = 'internal'
-    data.global_constant = True
-    data.initializer = value
-    STRINGS[s] = data
-    return data
 
 
 class BasicBlock(object):
@@ -198,19 +160,18 @@ class Codegen(Phase):
         self.loop_context = []
         self.basic_blocks = []
         self.methods = {}
+        self.functions = {}
+        self.strings = {}
 
     def run(self):
         obj_ptr = create_class_struct(PLAY_PACKAGE.children['Object']).as_pointer()
         str_ptr = create_class_struct(PLAY_PACKAGE.children['String']).as_pointer()
 
-        create_function(self.module, 'dump', ir.VoidType(), [int32])
-        create_function(self.module, 'dump2', ir.VoidType(), [int32.as_pointer()])
+        self.create_function(self.module, 'new', obj_ptr, [int32])
+        self.create_function(self.module, 'newString', str_ptr, [int8.as_pointer()])
+        self.create_function(self.module, 'cast', obj_ptr.as_pointer(), [obj_ptr, int32])
+        self.create_function(self.module, 'loadMethod', int32.as_pointer(), [obj_ptr, int32])
 
-        create_function(self.module, 'new', obj_ptr, [int32])
-        create_function(self.module, 'newString', str_ptr, [ir.PointerType(ir.IntType(8))])
-        create_function(self.module, 'cast', obj_ptr.as_pointer(), [obj_ptr, ir.IntType(32)])
-        create_function(self.module, 'loadMethod', ir.IntType(32).as_pointer(), [obj_ptr, ir.IntType(32)])
-        create_function(self.module, 'initialize', ir.VoidType(), [])
         Report().begin("Codegen")
         for cls in SymbolTable().get_classes():
             self.gen_class(cls)
@@ -221,6 +182,26 @@ class Codegen(Phase):
 
         with open(Context().code_gen_file, 'w') as f:
             f.write(str(self.module))
+
+    def new_string(self, module, s):
+        if s in self.strings:
+            return self.strings[s]
+        es = s.encode('utf-8')
+        b = bytearray(es)
+        b.append(0)
+        n = len(b)
+        value = ir.Constant(ir.ArrayType(ir.IntType(8), n), b)
+        data = ir.GlobalVariable(module, value.type, name='str{}'.format(hashlib.md5(es).hexdigest()))
+        data.linkage = 'internal'
+        data.global_constant = True
+        data.initializer = value
+        self.strings[s] = data
+        return data
+
+    def create_function(self, module, name, return_type, types):
+        type = ir.FunctionType(return_type, types)
+        func = ir.Function(module, type, name=name)
+        self.functions[name] = func
 
     @contextlib.contextmanager
     def new_env(self):
@@ -267,7 +248,7 @@ class Codegen(Phase):
             return self.methods[name]
         with self.new_env():
             builder = ir.IRBuilder(func.append_basic_block('entry'))
-            ret = builder.call(FUNCTIONS['new'], [ir.Constant(int32, cls_type.size)])
+            ret = builder.call(self.functions['new'], [ir.Constant(int32, cls_type.size)])
             ret = builder.bitcast(ret, return_type)
             builder.call(self.gen_new_fields(cls), [ret])
             builder.ret(builder.bitcast(ret, return_type))
@@ -292,7 +273,7 @@ class Codegen(Phase):
             builder.call(func, [builder.bitcast(builder.function.args[0], func.ftype.args[0])])
 
             ptr = builder.gep(builder.function.args[0], [
-                ir.Constant(int32, 0), ir.Constant(int32, 2)
+                ir.Constant(int32, 0), ir.Constant(int32, 0)
             ], inbounds=True, name='classId_ptr')
             builder.store(ir.Constant(int32, RuntimeGen().classes.index(cls)), ptr)
 
@@ -300,7 +281,7 @@ class Codegen(Phase):
                 if field.initializer:
                     value = self.expr(field.initializer)
                     ptr = self.builder.gep(self.builder.function.args[0], [
-                        ir.Constant(int32, 0), ir.Constant(int32, field.owner.inherited_fields.index(field) + 3)
+                        ir.Constant(int32, 0), ir.Constant(int32, field.owner.inherited_fields.index(field) + 1)
                     ], inbounds=True, name=field.name + '_ptr')
                     builder.store(value, ptr)
             builder.ret_void()
@@ -334,34 +315,15 @@ class Codegen(Phase):
                         ir.IRBuilder(block).ret_void()
 
     def gen_main(self):
-        type = ir.FunctionType(ir.IntType(32), [])
-        func = ir.Function(self.module, type, name='main')
+        type = ir.FunctionType(int32, [])
+        func = ir.Function(self.module, type, name='playMain')
         entry = func.append_basic_block('entry')
         builder = ir.IRBuilder(entry)
 
-        # obj_ptr = create_class_struct(PLAY_PACKAGE.children['Object']).as_pointer()
-        # struct = ir.LiteralStructType([
-        #     ir.IntType(1),
-        #     # ir.IntType(1),
-        #     # ir.IntType(8),
-        #     ir.IntType(16),
-        #     ir.IntType(32),
-        #     ir.IntType(64),
-        #     obj_ptr,
-        #     obj_ptr
-        # ])
-        # v = builder.alloca(struct)
-        # for i, e in enumerate(struct.elements):
-        #     x = builder.gep(v, [
-        #         ir.Constant(int32, 0), ir.Constant(int32, i)
-        #     ], inbounds=True)
-        #     builder.call(FUNCTIONS['dump'], [builder.ptrtoint(x, int64)])
-
-        builder.call(FUNCTIONS['initialize'], [])
         bootstrap_class = SymbolTable().get_class(Context().bootstrap_class)
         method = bootstrap_class.lookup_method('main', [], is_static=True)
         builder.call(self.get_method(method), [])
-        builder.ret(ir.Constant(ir.IntType(32), 0))
+        builder.ret(ir.Constant(int32, 0))
 
     def basic_block(self, func, name):
         block = BasicBlock()
@@ -445,7 +407,7 @@ class Codegen(Phase):
         var = self.env.lookup(expr.name)
         if isinstance(var, Field):
             return self.builder.gep(self.builder.function.args[0], [
-                ir.Constant(int32, 0), ir.Constant(int32, self.current_method.owner.inherited_fields.index(var) + 3)
+                ir.Constant(int32, 0), ir.Constant(int32, self.current_method.owner.inherited_fields.index(var) + 1)
             ], inbounds=True, name=var.name + '_ptr')
         if not var:
             var = self.builder.alloca(create_type(expr.type), name=expr.name)
@@ -468,7 +430,7 @@ class Codegen(Phase):
         var = self.env.lookup(expr.name)
         if isinstance(var, Field):
             ptr = self.builder.gep(self.builder.function.args[0], [
-                ir.Constant(int32, 0), ir.Constant(int32, self.current_method.owner.inherited_fields.index(var) + 3)
+                ir.Constant(int32, 0), ir.Constant(int32, self.current_method.owner.inherited_fields.index(var) + 1)
             ], inbounds=True, name=var.name + '_ptr')
             return self.builder.load(ptr, name=var.name)
         assert var
@@ -478,7 +440,7 @@ class Codegen(Phase):
         is_float = expr.left.type in REAL_NUMBERS
 
         if expr.op in {'||', '&&'}:
-            cond_ptr = self.builder.alloca(ir.IntType(1), name='cond_ptr')
+            cond_ptr = self.builder.alloca(int1, name='cond_ptr')
             cond_left = self.basic_block(self.builder.function, 'cond.left')
             true = self.basic_block(self.builder.function, 'cond.true')
             false = self.basic_block(self.builder.function, 'cond.false')
@@ -489,11 +451,11 @@ class Codegen(Phase):
                 self.builder.cbranch(self.expr(expr.left), cond_left.block, false.block)
 
             self.builder = ir.IRBuilder(true.block)
-            self.builder.store(ir.Constant(ir.IntType(1), 1), cond_ptr)
+            self.builder.store(ir.Constant(int1, 1), cond_ptr)
             self.builder.branch(end.block)
 
             self.builder = ir.IRBuilder(false.block)
-            self.builder.store(ir.Constant(ir.IntType(1), 0), cond_ptr)
+            self.builder.store(ir.Constant(int1, 0), cond_ptr)
             self.builder.branch(end.block)
 
             self.builder = ir.IRBuilder(cond_left.block)
@@ -503,32 +465,21 @@ class Codegen(Phase):
             self.basic_blocks.append(end)
             self.builder = ir.IRBuilder(end.block)
             return self.builder.load(cond_ptr, name='cond')
+
         left = self.expr(expr.left)
         right = self.expr(expr.right)
         if expr.op == '+':
-            if is_float:
-                return self.builder.fadd(left, right)
-            return self.builder.add(left, right)
+            return self.builder.fadd(left, right) if is_float else self.builder.add(left, right)
         if expr.op == '-':
-            if is_float:
-                return self.builder.fsub(left, right)
-            return self.builder.sub(left, right)
+            return self.builder.fsub(left, right) if is_float else self.builder.sub(self, right)
         if expr.op == '*':
-            if is_float:
-                return self.builder.fmul(left, right)
-            return self.builder.mul(left, right)
+            return self.builder.fmul(left, right) if is_float else self.builder.mul(left, right)
         if expr.op == '/':
-            if is_float:
-                return self.builder.fdiv(left, right)
-            return self.builder.sdiv(left, right)
+            return self.builder.fdiv(left, right) if is_float else self.builder.sdiv(left, right)
         if expr.op == '%':
-            if is_float:
-                return self.builder.frem(left, right)
-            return self.builder.srem(left, right)
+            return self.builder.frem(left, right) if is_float else self.builder.srem(left, right)
         if expr.op in {'<', '>', '<=', '>=', '==', '!='}:
-            if is_float:
-                return self.builder.fcmp_ordered(expr.op, left, right)
-            return self.builder.icmp_signed(expr.op, left, right)
+            return self.builder.fcmp_ordered(expr.op, left, right) if is_float else self.builder.icmp_signed(expr.op, left, right)
         if expr.op == '<<':
             return self.builder.shl(left, right)
         if expr.op == '>>':
@@ -554,8 +505,8 @@ class Codegen(Phase):
         obj_ptr = create_class_struct(PLAY_PACKAGE.children['Object']).as_pointer()
         if isinstance(cast.type, ObjectType):
             from cgen import RuntimeGen
-            return self.builder.bitcast(self.builder.call(FUNCTIONS['cast'], [
-                self.builder.bitcast(self.expr(cast.expr), obj_ptr), ir.Constant(ir.IntType(32), RuntimeGen().classes.index(cast.type.cls))
+            return self.builder.bitcast(self.builder.call(self.functions['cast'], [
+                self.builder.bitcast(self.expr(cast.expr), obj_ptr), ir.Constant(int32, RuntimeGen().classes.index(cast.type.cls))
             ]), create_type(cast.type))
 
         return self.builder.bitcast(self.expr(cast.expr), create_type(cast.type))
@@ -585,25 +536,22 @@ class Codegen(Phase):
         this = self.builder.load(this)
         obj_ptr = create_class_struct(PLAY_PACKAGE.children['Object']).as_pointer()
         method_id = call.method.owner.inherited_methods.index(call.method)
-        method_ptr = self.builder.call(FUNCTIONS['loadMethod'], [self.builder.bitcast(this, obj_ptr), ir.Constant(ir.IntType(32), method_id)])
-        self.builder.call(FUNCTIONS['dump2'], [self.builder.bitcast(method_ptr, int32.as_pointer())])
+        method_ptr = self.builder.call(self.functions['loadMethod'], [self.builder.bitcast(this, obj_ptr), ir.Constant(int32, method_id)])
         parameters = [create_type(p.type) for p in call.method.parameters]
-        # parameters.insert(0, create_class_struct(call.method.owner).as_pointer())
         function_type = ir.FunctionType(create_type(call.method.return_type), parameters)
         method = self.builder.bitcast(method_ptr, function_type.as_pointer())
         args = [self.expr(arg) for arg in call.arguments]
-        # args.insert(0, self.builder.bitcast(this, function_type.args[0]))
         return self.builder.call(method, args)
 
     def field_access(self, expr: FieldAccess, load=True) -> ir.Value:
         if not expr.select:
             ptr = self.builder.gep(self.builder.function.args[0], [
-                ir.Constant(int32, 0), ir.Constant(int32, expr.field.owner.inherited_fields.index(expr.field) + 3)
+                ir.Constant(int32, 0), ir.Constant(int32, expr.field.owner.inherited_fields.index(expr.field) + 1)
             ], inbounds=True, name=expr.field.name + '_ptr')
             return self.builder.load(ptr, name=expr.field.name)
 
         ptr = self.builder.gep(self.expr(expr.select), [
-            ir.Constant(int32, 0), ir.Constant(int32, expr.field.owner.inherited_fields.index(expr.field) + 3)
+            ir.Constant(int32, 0), ir.Constant(int32, expr.field.owner.inherited_fields.index(expr.field) + 1)
         ], inbounds=True, name=expr.field.name + '_ptr')
         if not load:
             return ptr
@@ -611,7 +559,7 @@ class Codegen(Phase):
 
     def literal(self, expr: Literal) -> ir.Value:
         if isinstance(expr.type, ObjectType):
-            value = self.builder.bitcast(new_string(self.module, expr.value), ir.IntType(8).as_pointer())
-            return self.builder.call(FUNCTIONS['newString'], [value])
+            value = self.builder.bitcast(self.new_string(self.module, expr.value), int8.as_pointer())
+            return self.builder.call(self.functions['newString'], [value])
         else:
             return ir.Constant(create_type(expr.type), expr.value)

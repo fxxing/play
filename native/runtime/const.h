@@ -32,7 +32,7 @@ typedef struct struct_Method {
 typedef struct struct_Class {
     const char* name;
     int classId;
-    int* new;
+//    int* new;
     int flag;
     int superCount;
     int* superclasses;

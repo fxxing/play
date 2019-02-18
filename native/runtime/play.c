@@ -2,12 +2,15 @@
 #include <play/String.h>
 #include <string.h>
 #include "const.h"
+#include "tgc.h"
 
 extern Class CLASSES[];
 
+static tgc_t gc;
+
 
 NATIVE play_Object new(int size) {
-    play_Object ptr = malloc(size);
+    play_Object ptr = tgc_alloc(&gc, size);
     return ptr;
 }
 
@@ -48,10 +51,21 @@ NATIVE int *loadMethod(play_Object object, int methodId) {
     return CLASSES[object->classId].methods[methodId].func;
 }
 
-NATIVE void dump(int n) {
-    printf("dump %d\n", n);
+extern void initConst();
+extern void playMain();
+
+NATIVE void initialize() {
+    initConst();
 }
 
-NATIVE void dump2(int *value) {
-    printf("dump2 %p\n", value);
+NATIVE void runGC() {
+    tgc_run(&gc);
+}
+
+
+int main(int argc, char **argv) {
+    tgc_start(&gc, &argc);
+    initialize();
+    playMain();
+    tgc_stop(&gc);
 }

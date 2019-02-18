@@ -5,6 +5,7 @@ class Hello {
         System.print("Hello world")
         v = new HelloSub()
         v.test0()
+        System.gc()
     }
     def test0() {
         System.print("in super")

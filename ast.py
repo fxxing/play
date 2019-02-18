@@ -259,6 +259,10 @@ class ObjectType(Type):
     def __repr__(self):
         return self.cls.qualified_name
 
+    @property
+    def name(self):
+        return self.cls.qualified_name
+
 
 class ClassType(ObjectType):
     def __init__(self, cls: Class):
