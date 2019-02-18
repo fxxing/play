@@ -12,24 +12,24 @@ from symbol import SymbolTable
 from util import CompileException, never_be_here
 
 
-def can_cast_to(self: Type, to_type: Type, force=False) -> bool:
-    if not self:
+def can_cast_to(from_type: Type, to_type: Type, force=False) -> bool:
+    if not from_type:
         return not to_type
-    if self == to_type:
+    if from_type == to_type:
         return True
     # TODO add cast
-    if self == NULL_TYPE:
+    if from_type == NULL_TYPE:
         return isinstance(to_type, ObjectType)
-    if isinstance(self, Primitive):
+    if isinstance(from_type, Primitive):
         if isinstance(to_type, Primitive):
-            return to_type.name in UPPER_CASTS.get(self.name)
+            return to_type.name in UPPER_CASTS.get(from_type.name)
         elif isinstance(to_type, ObjectType):
-            return BOX_CASTS.get(self.name) == to_type.cls.qualified_name
-    elif isinstance(self, ObjectType):
+            return BOX_CASTS.get(from_type.name) == to_type.cls.qualified_name
+    elif isinstance(from_type, ObjectType):
         if isinstance(to_type, Primitive):
-            return BOX_CASTS.get(self.cls.qualified_name) == to_type.name
+            return BOX_CASTS.get(from_type.cls.qualified_name) == to_type.name
         elif isinstance(to_type, ObjectType):
-            return True if force else self.cls.subclass_of(to_type.cls)
+            return True if force else from_type.cls.subclass_of(to_type.cls)
     return False
 
 
