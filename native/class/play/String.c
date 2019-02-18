@@ -2,8 +2,12 @@
 #include "String.h"
 
 
+extern int play_String_id;
+
 NATIVE play_String play_String_new() {
-    return malloc(sizeof(struct struct_play_String));
+    play_String this = new(sizeof(struct struct_play_String));
+    this->classId = play_String_id;
+    return this;
 }
 
 NATIVE void play_String_concat_V_TO(play_String this, play_String str, play_Object other) {

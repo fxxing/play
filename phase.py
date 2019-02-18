@@ -5,7 +5,7 @@ from antlr4 import CommonTokenStream, FileStream
 
 from ast import SourceFile, Package, Class, ObjectType, Field, Method, Parameter, Type, Block, ClassType
 from type import ROOT_PACKAGE, BOOLEAN_TYPE, BYTE_TYPE, SHORT_TYPE, INT_TYPE, LONG_TYPE, FLOAT_TYPE, DOUBLE_TYPE, PLAY_PACKAGE, PRIMITIVES
-from context import Context
+from option import Option
 from env import lookup_class
 from parser.PlayLexer import PlayLexer
 from parser.PlayParser import PlayParser
@@ -42,7 +42,7 @@ class Phase(object):
 class Parse(Phase):
     def run(self):
         Report().begin("Parsing")
-        for src in Context().source_locations:
+        for src in Option().source_locations:
             if not src.endswith('/'):
                 src += '/'
             for root, dirs, files in os.walk(src):
@@ -60,7 +60,7 @@ class Parse(Phase):
         package = SymbolTable().enter_package(package)
         src = SourceFile(path)
         parser = PlayParser(CommonTokenStream(PlayLexer(FileStream(path, encoding='utf-8'))))
-        Context().nodes[src] = parser.compilationUnit()
+        Option().nodes[src] = parser.compilationUnit()
         package.source_files.append(src)
 
 
@@ -72,7 +72,7 @@ class EnterClass(Phase):
 
     def enter(self, package: Package):
         for src in package.source_files:
-            self.enter_class(package, src, Context().nodes[src].classDeclaration())
+            self.enter_class(package, src, Option().nodes[src].classDeclaration())
         for child in package.children.values():
             if isinstance(child, Package):
                 self.enter(child)
@@ -83,7 +83,7 @@ class EnterClass(Phase):
         cls.is_native = ctx.NATIVE() is not None
         if cls.is_native and cls.is_interface:
             raise CompileException('interface {} cannot be native'.format(cls))
-        Context().nodes[cls] = ctx
+        Option().nodes[cls] = ctx
         package.put(cls)
         SymbolTable().enter_class(cls)
 
@@ -96,7 +96,7 @@ class ResolveImport(Phase):
         Report().end()
 
     def resolve(self, src: SourceFile):
-        ctx: PlayParser.CompilationUnitContext = Context().nodes[src]
+        ctx: PlayParser.CompilationUnitContext = Option().nodes[src]
         for i in ctx.importDeclaration():
             cls = SymbolTable().get_class(i.qualifiedName().getText())
             src.imports[cls.name] = cls
@@ -110,7 +110,7 @@ class BuildHierarchy(Phase):
         Report().end()
 
     def build(self, cls: Class):
-        ctx: PlayParser.ClassDeclarationContext = Context().nodes[cls]
+        ctx: PlayParser.ClassDeclarationContext = Option().nodes[cls]
         if ctx.classTypeList():
             for sc in ctx.classTypeList().classType():
                 superclass = lookup_class(sc.IDENTIFIER().getText(), cls)
@@ -172,7 +172,7 @@ class EnterMember(Phase):
     def run(self):
         Report().begin("Enter member")
         for cls in SymbolTable().get_classes():
-            ctx: PlayParser.ClassDeclarationContext = Context().nodes[cls]
+            ctx: PlayParser.ClassDeclarationContext = Option().nodes[cls]
             for member in ctx.memberDeclaration():
                 if member.methodDeclaration():
                     self.enter_method(cls, member.methodDeclaration())
@@ -198,12 +198,12 @@ class EnterMember(Phase):
                 method.parameters.append(Parameter(v.IDENTIFIER().getText(), parameter_type))
         if ctx.typeName():
             method.return_type = build_type(ctx.typeName(), cls)
-        Context().nodes[method] = ctx
+        Option().nodes[method] = ctx
         cls.put_method(method)
 
     def enter_field(self, cls: Class, ctx: PlayParser.FieldDeclarationContext):
         if cls.is_interface or cls.is_native:
             raise CompileException("Interface/native class {} cannot have fields".format(cls))
         field = Field(ctx.variable().IDENTIFIER().getText(), cls, build_type(ctx.variable().typeName(), cls))
-        Context().nodes[field] = ctx
+        Option().nodes[field] = ctx
         cls.put_field(field)

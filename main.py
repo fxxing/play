@@ -5,7 +5,7 @@ import phase
 import translate
 from cgen import NativeGen, RuntimeGen
 from codegen import Codegen
-from context import Context
+from option import Option
 from report import Report
 
 
@@ -14,7 +14,7 @@ class Link(phase.Phase):
         self.obj_files = ['build/play.ll']
 
     def run(self):
-        for src in [Context().c_runtime_location, Context().c_source_location]:
+        for src in [Option().c_runtime_location, Option().c_source_location]:
             if not src.endswith('/'):
                 src += '/'
             for root, dirs, files in os.walk(src):
@@ -31,7 +31,7 @@ class Link(phase.Phase):
         if not os.path.exists(folder):
             os.makedirs(folder)
         self.obj_files.append(target)
-        os.system('clang -I {} -I {} -c {} -o {}'.format(Context().c_runtime_location, Context().c_source_location, path, target))
+        os.system('clang -I {} -I {} -c {} -o {}'.format(Option().c_runtime_location, Option().c_source_location, path, target))
 
     def link(self):
         os.system('clang {} -o build/a.out'.format(' '.join(self.obj_files)))
@@ -61,7 +61,7 @@ class Compiler(object):
 
 
 def main():
-    ctx = Context()
+    ctx = Option()
     ctx.source_locations = ['play', 'test']
     ctx.bootstrap_class = 'Hello'
     ctx.code_gen_file = 'build/play.ll'

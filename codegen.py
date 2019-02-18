@@ -6,7 +6,7 @@ from llvmlite import ir
 
 from ast import Class, Method, Field, Type, ObjectType, Block, Statement, ExprStatement, WhileStatement, IfStatement, AssignStatement, ReturnStatement, Expr, \
     Variable, BinExpr, UnaryExpr, CastExpr, ClassCreation, MethodCall, ClassExpr, FieldAccess, Literal, Parameter
-from context import Context
+from option import Option
 from flow import is_terminal
 from phase import Phase
 from report import Report
@@ -20,7 +20,7 @@ int16 = ir.IntType(16)
 int32 = ir.IntType(32)
 int64 = ir.IntType(64)
 
-ir_types = {
+IR_TYPES = {
     'boolean': int1,
     'byte': int8,
     'short': int16,
@@ -31,15 +31,15 @@ ir_types = {
 }
 
 
-def create_type(type: Type) -> ir.Type:
+def ir_type(type: Type) -> ir.Type:
     if not type:
         return ir.VoidType()
     if isinstance(type, ObjectType):
-        return create_class_struct(type.cls).as_pointer()
-    return ir_types[type.name]
+        return gen_class_struct(type.cls).as_pointer()
+    return IR_TYPES[type.name]
 
 
-def get_struct_size(struct: ir.IdentifiedStructType, packed=False):
+def calc_struct_size(struct: ir.IdentifiedStructType, packed=False):
     sizes = []
     for element in struct.elements:
         if isinstance(element, ir.PointerType):
@@ -69,7 +69,7 @@ def get_struct_size(struct: ir.IdentifiedStructType, packed=False):
     return offset
 
 
-def create_class_struct(cls: Class) -> ir.Type:
+def gen_class_struct(cls: Class) -> ir.Type:
     qualified_name = cls.qualified_name
     name = qualified_name.replace('.', '_')
     if name in ir.global_context.identified_types:
@@ -80,13 +80,13 @@ def create_class_struct(cls: Class) -> ir.Type:
         return type
 
     elements = [int32]
-    elements.extend(create_type(field.type) for field in cls.inherited_fields)
+    elements.extend(ir_type(field.type) for field in cls.inherited_fields)
     type.set_body(*elements)
-    type.size = get_struct_size(type)
+    type.size = calc_struct_size(type)
     return type
 
 
-sig_type_name = {
+SIG_TYPES = {
     'boolean': 'Z',
     'byte': 'B',
     'short': 'S',
@@ -99,21 +99,21 @@ sig_type_name = {
 }
 
 
-def get_type_name(type: Type) -> str:
+def get_type_sig(type: Type) -> str:
     if not type:
         return 'V'
-    if type.name in sig_type_name:
-        return sig_type_name[type.name]
+    if type.name in SIG_TYPES:
+        return SIG_TYPES[type.name]
     return 'C{}'.format(type.name.replace('.', '_'))
 
 
-def get_method_name(method: Method) -> str:
+def mangle_method_name(method: Method) -> str:
     ret = [method.owner.qualified_name.replace('.', '_')]
     if method.is_static:
         ret.append('s')
     ret.append(method.owner.name if method.name == '<init>' else method.name)
-    ret.append(get_type_name(method.return_type))
-    ret.append(''.join([get_type_name(p.type) for p in method.parameters]))
+    ret.append(get_type_sig(method.return_type))
+    ret.append(''.join([get_type_sig(p.type) for p in method.parameters]))
     return '_'.join(ret)
 
 
@@ -164,8 +164,8 @@ class Codegen(Phase):
         self.strings = {}
 
     def run(self):
-        obj_ptr = create_class_struct(PLAY_PACKAGE.children['Object']).as_pointer()
-        str_ptr = create_class_struct(PLAY_PACKAGE.children['String']).as_pointer()
+        obj_ptr = gen_class_struct(PLAY_PACKAGE.children['Object']).as_pointer()
+        str_ptr = gen_class_struct(PLAY_PACKAGE.children['String']).as_pointer()
 
         self.create_function(self.module, 'new', obj_ptr, [int32])
         self.create_function(self.module, 'newString', str_ptr, [int8.as_pointer()])
@@ -180,7 +180,7 @@ class Codegen(Phase):
 
         self.gen_main()
 
-        with open(Context().code_gen_file, 'w') as f:
+        with open(Option().code_gen_file, 'w') as f:
             f.write(str(self.module))
 
     def new_string(self, module, s):
@@ -216,13 +216,13 @@ class Codegen(Phase):
         self.basic_blocks.pop()
 
     def get_method(self, method: Method) -> ir.Function:
-        name = get_method_name(method)
+        name = mangle_method_name(method)
         if name not in self.methods:
-            parameters = [create_type(p.type) for p in method.parameters]
+            parameters = [ir_type(p.type) for p in method.parameters]
             if not method.is_static:
-                parameters.insert(0, create_class_struct(method.owner).as_pointer())
-            type = ir.FunctionType(create_type(method.return_type), parameters)
-            func = ir.Function(self.module, type, name=get_method_name(method))
+                parameters.insert(0, gen_class_struct(method.owner).as_pointer())
+            type = ir.FunctionType(ir_type(method.return_type), parameters)
+            func = ir.Function(self.module, type, name=mangle_method_name(method))
             self.methods[name] = func
         return self.methods[name]
 
@@ -239,7 +239,7 @@ class Codegen(Phase):
         name = cls.qualified_name.replace('.', '_') + '_new'
         if name in self.methods:
             return self.methods[name]
-        cls_type = create_class_struct(cls)
+        cls_type = gen_class_struct(cls)
         return_type = cls_type.as_pointer()
         func_type = ir.FunctionType(return_type, [])
         func = ir.Function(self.module, func_type, name=name)
@@ -259,7 +259,7 @@ class Codegen(Phase):
         name = cls.qualified_name.replace('.', '_') + '_init'
         if name in self.methods:
             return self.methods[name]
-        cls_type = create_class_struct(cls)
+        cls_type = gen_class_struct(cls)
         func_type = ir.FunctionType(ir.VoidType(), [cls_type.as_pointer()])
         func = ir.Function(self.module, func_type, name=name)
         self.methods[name] = func
@@ -320,7 +320,7 @@ class Codegen(Phase):
         entry = func.append_basic_block('entry')
         builder = ir.IRBuilder(entry)
 
-        bootstrap_class = SymbolTable().get_class(Context().bootstrap_class)
+        bootstrap_class = SymbolTable().get_class(Option().bootstrap_class)
         method = bootstrap_class.lookup_method('main', [], is_static=True)
         builder.call(self.get_method(method), [])
         builder.ret(ir.Constant(int32, 0))
@@ -410,7 +410,7 @@ class Codegen(Phase):
                 ir.Constant(int32, 0), ir.Constant(int32, self.current_method.owner.inherited_fields.index(var) + 1)
             ], inbounds=True, name=var.name + '_ptr')
         if not var:
-            var = self.builder.alloca(create_type(expr.type), name=expr.name)
+            var = self.builder.alloca(ir_type(expr.type), name=expr.name)
             self.env.enter(expr.name, var)
         return var
 
@@ -502,17 +502,21 @@ class Codegen(Phase):
         return self.expr(expr.expr)
 
     def cast_expr(self, cast: CastExpr) -> ir.Value:
-        obj_ptr = create_class_struct(PLAY_PACKAGE.children['Object']).as_pointer()
+        obj_ptr = gen_class_struct(PLAY_PACKAGE.children['Object']).as_pointer()
         if isinstance(cast.type, ObjectType):
             from cgen import RuntimeGen
             return self.builder.bitcast(self.builder.call(self.functions['cast'], [
                 self.builder.bitcast(self.expr(cast.expr), obj_ptr), ir.Constant(int32, RuntimeGen().classes.index(cast.type.cls))
-            ]), create_type(cast.type))
+            ]), ir_type(cast.type))
 
-        return self.builder.bitcast(self.expr(cast.expr), create_type(cast.type))
+        return self.builder.bitcast(self.expr(cast.expr), ir_type(cast.type))
 
     def class_creation(self, creation: ClassCreation) -> ir.Value:
         return self.builder.call(self.gen_new(creation.cls), [])
+
+    def class_expr(self, expr: ClassExpr) -> ir.Value:
+        from cgen import RuntimeGen
+        return ir.Constant(int32, RuntimeGen().classes.index(expr.cls))
 
     def method_call(self, call: MethodCall) -> ir.Value:
         if isinstance(call.select, ClassExpr):
@@ -534,11 +538,11 @@ class Codegen(Phase):
 
     def invoke_dynamic(self, this: ir.Value, call: MethodCall):
         this = self.builder.load(this)
-        obj_ptr = create_class_struct(PLAY_PACKAGE.children['Object']).as_pointer()
+        obj_ptr = gen_class_struct(PLAY_PACKAGE.children['Object']).as_pointer()
         method_id = call.method.owner.inherited_methods.index(call.method)
         method_ptr = self.builder.call(self.functions['loadMethod'], [self.builder.bitcast(this, obj_ptr), ir.Constant(int32, method_id)])
-        parameters = [create_type(p.type) for p in call.method.parameters]
-        function_type = ir.FunctionType(create_type(call.method.return_type), parameters)
+        parameters = [ir_type(p.type) for p in call.method.parameters]
+        function_type = ir.FunctionType(ir_type(call.method.return_type), parameters)
         method = self.builder.bitcast(method_ptr, function_type.as_pointer())
         args = [self.expr(arg) for arg in call.arguments]
         return self.builder.call(method, args)
@@ -562,4 +566,4 @@ class Codegen(Phase):
             value = self.builder.bitcast(self.new_string(self.module, expr.value), int8.as_pointer())
             return self.builder.call(self.functions['newString'], [value])
         else:
-            return ir.Constant(create_type(expr.type), expr.value)
+            return ir.Constant(ir_type(expr.type), expr.value)

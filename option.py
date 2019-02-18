@@ -4,7 +4,7 @@ from util import singleton
 
 
 @singleton
-class Context(object):
+class Option(object):
     def __init__(self):
         self.nodes = {}
         self.source_locations: List[str] = []

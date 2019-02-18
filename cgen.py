@@ -2,8 +2,8 @@ import os
 from typing import List
 
 from ast import Class, Method, Type, ObjectType, Primitive, Package
-from codegen import get_method_name
-from context import Context
+from codegen import mangle_method_name
+from option import Option
 from phase import Phase
 from report import Report
 from symbol import SymbolTable
@@ -58,8 +58,8 @@ class NativeGen(Phase):
                 methods.append(self.gen_method(method))
 
         if class_struct or methods:
-            header = os.path.join(Context().c_source_location, cls.qualified_name.replace('.', '/') + '.h')
-            source = os.path.join(Context().c_source_location, cls.qualified_name.replace('.', '/') + '.c')
+            header = os.path.join(Option().c_source_location, cls.qualified_name.replace('.', '/') + '.h')
+            source = os.path.join(Option().c_source_location, cls.qualified_name.replace('.', '/') + '.c')
             folder = os.path.dirname(header)
             if not os.path.exists(folder):
                 os.makedirs(folder)
@@ -76,7 +76,7 @@ class NativeGen(Phase):
             parameters.insert(0, '{} {}'.format(get_c_type_name(ObjectType(method.owner)), 'this'))
         return 'NATIVE {} {}({})'.format(
             get_c_type_name(method.return_type),
-            get_method_name(method),
+            mangle_method_name(method),
             ', '.join(parameters))
 
 
@@ -134,10 +134,10 @@ class RuntimeGen(Phase):
             assigns = []
             method_assigns[cls_name + '_methods'] = assigns
             for method in cls.inherited_methods:
-                externals.add('extern int ' + get_method_name(method) + ';')
+                externals.add('extern int ' + mangle_method_name(method) + ';')
                 sig = ', '.join(str(p.type) for p in method.parameters)
                 class_children.append('    {' + '"{}", {}, {}, "{}", NULL'.format(method.name, self.classes.index(method.owner), 0, sig) + '},')
-                assigns.append(get_method_name(method))
+                assigns.append(mangle_method_name(method))
             class_children.append('};')
             flag = 0
             if cls.is_interface:
@@ -167,5 +167,5 @@ class RuntimeGen(Phase):
                 content.append('    {}[{}].func = &{};'.format(k, i, v))
 
         content.append('}')
-        with open(Context().const_file, 'w') as f:
+        with open(Option().const_file, 'w') as f:
             f.write('\n'.join(content))

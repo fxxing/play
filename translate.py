@@ -3,7 +3,7 @@ from typing import Tuple
 from ast import *
 from type import *
 from type import INTEGER_NUMBERS, NUMBERS
-from context import Context
+from option import Option
 from env import Env, lookup_class
 from parser.PlayParser import PlayParser
 from phase import Phase, build_type
@@ -48,7 +48,7 @@ def upper_type(t1, t2):
 
 class Translate(Phase):
     def __init__(self):
-        self.nodes = Context().nodes
+        self.nodes = Option().nodes
         self.current_class: Class = None
         self.this_var: Variable = None
         self.super_var: Variable = None
@@ -61,7 +61,7 @@ class Translate(Phase):
             Report().report('translate {}'.format(cls), lambda: self.translate(cls))
         Report().end()
 
-        Context().nodes = {}
+        Option().nodes = {}
 
     def translate(self, cls: Class):
         self.current_class = cls

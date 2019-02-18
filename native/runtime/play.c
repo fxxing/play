@@ -9,13 +9,12 @@ extern Class CLASSES[];
 static tgc_t gc;
 
 
-NATIVE play_Object new(int size) {
-    play_Object ptr = tgc_alloc(&gc, size);
-    return ptr;
+NATIVE void *new(int size) {
+    return tgc_alloc(&gc, size);
 }
 
 NATIVE play_String newString(char *str) {
-    play_String string = malloc(sizeof(struct struct_play_String));
+    play_String string = new(sizeof(struct struct_play_String));
     string->length = (pint) strlen(str);
     string->value = str;
     return string;
@@ -52,6 +51,7 @@ NATIVE int *loadMethod(play_Object object, int methodId) {
 }
 
 extern void initConst();
+
 extern void playMain();
 
 NATIVE void initialize() {

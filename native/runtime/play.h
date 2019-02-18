@@ -9,7 +9,6 @@
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "ugc.h"
 
 typedef unsigned char pboolean;
 typedef unsigned char pbyte;
@@ -29,6 +28,8 @@ typedef double pdouble;
 typedef struct struct_##name* name;
 
 #define NATIVE __attribute__((unused))
+
+NATIVE void* new(int size);
 
 
 #endif //PLAY_H
