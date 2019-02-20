@@ -539,6 +539,7 @@ class Codegen(Phase):
     def invoke_dynamic(self, this: ir.Value, call: MethodCall):
         this = self.builder.load(this)
         obj_ptr = gen_class_struct(PLAY_PACKAGE.children['Object']).as_pointer()
+        # TODO: multiple dispath via perfect hashing
         method_id = call.method.owner.inherited_methods.index(call.method)
         method_ptr = self.builder.call(self.functions['loadMethod'], [self.builder.bitcast(this, obj_ptr), ir.Constant(int32, method_id)])
         parameters = [ir_type(p.type) for p in call.method.parameters]
